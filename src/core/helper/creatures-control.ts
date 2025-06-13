@@ -7,7 +7,6 @@ interface IVerifyCreatureState {
   cells: TCreatures;
   fieldSize: number;
   updateCreatureCallback: (cell: ICreature) => void;
-  handleNeighborsCallback: (cells: ICreature[]) => void;
 }
 
 export const verifyCreatureState = ({
@@ -17,21 +16,41 @@ export const verifyCreatureState = ({
   updateCreatureCallback,
 }: IVerifyCreatureState) => {
   const cellNeighbors = getNeighbors(cells, cell, fieldSize);
+  const livingNeighbors = cellNeighbors.filter((cell) => cell.Alive).length;
 
-  cellNeighbors.forEach((item) => updateCreatureCallback(item));
+  switch (cell.Alive) {
+    case true: {
+      if (livingNeighbors < 2 || livingNeighbors > 3) {
+        cell.Kill();
+
+        break;
+      }
+
+      cell.Revive();
+      break;
+    }
+    default: {
+      if (livingNeighbors === 3) {
+        cell.Revive();
+      }
+
+      break;
+    }
+  }
+
+  updateCreatureCallback(cell);
+
+  if (!cell.Alive && cellNeighbors.filter((item) => item.Alive).length === 3) {
+    cell.Revive();
+
+    return;
+  }
 
   if (
     cell.Alive &&
     (cellNeighbors.filter((item) => item.Alive).length === 2 ||
       cellNeighbors.filter((item) => item.Alive).length === 3)
   ) {
-    return;
-  }
-
-  if (!cell.Alive && cellNeighbors.filter((item) => item.Alive).length === 3) {
-    cell.Revive();
-
-    updateCreatureCallback(cell);
     return;
   }
 

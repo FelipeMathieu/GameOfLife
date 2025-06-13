@@ -3,7 +3,6 @@ import { useCreatures } from "../../core/store";
 import { CELL_SIZE, FIELD_SIZE } from "../../common/constants";
 import { useWatchUpdatedCreature } from "./watch-updated-creature";
 import { useWatchCanvasClick } from "./watch-canvas-click";
-import { useCanvasRender } from "./canvas-render";
 
 const drawGrid = () =>
   Array(FIELD_SIZE)
@@ -20,8 +19,6 @@ export const useFieldControl = () => {
   useWatchCanvasClick(canvasRef);
 
   useWatchUpdatedCreature(canvasRef);
-
-  useCanvasRender(canvasRef, grid);
 
   useEffect(() => {
     const canvas = canvasRef.current;

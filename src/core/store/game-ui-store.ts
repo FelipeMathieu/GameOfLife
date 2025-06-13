@@ -6,6 +6,7 @@ interface IState {
   generations: number;
   updateRunning: (value: boolean) => void;
   nextGeneration: () => void;
+  reset: () => void;
 }
 
 const store = create<IState>((set) => ({
@@ -14,6 +15,7 @@ const store = create<IState>((set) => ({
   updateRunning: (value: boolean) => set(() => ({ running: value })),
   nextGeneration: () =>
     set((state) => ({ generations: state.generations + 1 })),
+  reset: () => set(() => ({ generations: 0 })),
 }));
 
 export const useRunning = () => {
@@ -26,6 +28,7 @@ export const useRunning = () => {
 export const useGenerations = () => {
   const generations = store(useShallow((state) => state.generations));
   const nextGeneration = store((state) => state.nextGeneration);
+  const reset = store((state) => state.reset);
 
-  return { generations, nextGeneration };
+  return { generations, nextGeneration, reset };
 };

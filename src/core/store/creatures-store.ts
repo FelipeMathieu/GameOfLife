@@ -8,7 +8,8 @@ interface IState {
   cells: TCreatures;
   updatedCreature: ICreature | null;
   updateCreature: (creature: ICreature) => void;
-  updateCreatureNeighbors: (neighbors: ICreature[]) => void;
+  batchUpdate: (creatures: ICreature[]) => void;
+  killAll: () => void;
 }
 
 const store = create(
@@ -23,13 +24,25 @@ const store = create(
         },
         updatedCreature: creature,
       })),
-    updateCreatureNeighbors: (neighbors: ICreature[]) =>
+    batchUpdate: (creatures: ICreature[]) =>
       set((state) => ({
         cells: {
           ...state.cells,
-          ...keyBy(neighbors, (item) => `${item.X},${item.Y}`),
+          ...keyBy(creatures, (item) => `${item.X},${item.Y}`),
         },
       })),
+    killAll: () =>
+      set((state) => {
+        const deadCreatures = values(state.cells).map((creature) => {
+          creature.Kill();
+          return creature;
+        });
+        return {
+          cells: {
+            ...keyBy(deadCreatures, (item) => `${item.X},${item.Y}`),
+          },
+        };
+      }),
   }))
 );
 
@@ -37,11 +50,10 @@ export const useCreatures = () => {
   const cells = store((state) => state.cells);
   const cellsSub = (callback: (cells: TCreatures) => void) =>
     store.subscribe((state) => state.cells, callback);
-  const updateCreatureNeighbors = store(
-    (state) => state.updateCreatureNeighbors
-  );
+  const batchUpdate = store((state) => state.batchUpdate);
+  const killAll = store((state) => state.killAll);
 
-  return { cells, cellsSub, updateCreatureNeighbors };
+  return { cells, cellsSub, batchUpdate, killAll };
 };
 
 export const usePopulation = () => {
