@@ -1,1 +1,3 @@
-export type TShape = (0 | 1)[][];
+import type { ICreature } from "../interfaces";
+
+export type TCreatures = Record<`${number},${number}`, ICreature>;

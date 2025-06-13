@@ -1,69 +1,76 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Creature } from "../../common/models";
-import { updateCreature, useCreatures } from "../../core/store";
-import { useCreaturesControl } from "../../core/hooks/creatures-control";
+import { useEffect, useRef, useState } from "react";
+import { useCreatures, useRunning, useUpdatedCreature } from "../../core/store";
+import { verifyCreatureState } from "../../core/helper/creatures-control";
+import { CELL_SIZE, FIELD_SIZE } from "../../common/constants";
+import { useWatchUpdatedCreature } from "./watch-updated-creature";
+import { useWatchCanvasClick } from "./watch-canvas-click";
 
-const drawGrid = (size: number) =>
-  Array(size)
+const drawGrid = () =>
+  Array(FIELD_SIZE)
     .fill(null)
-    .map(() => Array(size).fill(null));
+    .map(() => Array(FIELD_SIZE).fill(null));
 
-export const useFieldControl = (fieldSize: number) => {
+export const useFieldControl = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const cellSize = 30;
-  const cells = useCreatures();
+  const { cells } = useCreatures();
+  const { updateCreature } = useUpdatedCreature();
+  const { running } = useRunning();
 
-  const [grid, setGrid] = useState<null[][]>(drawGrid(fieldSize));
+  const [grid, setGrid] = useState<null[][]>(drawGrid());
 
-  useCreaturesControl(false, grid, cells);
+  useWatchCanvasClick(canvasRef);
 
-  const getCellCoordinates = useCallback(
-    (clientX: number, clientY: number) => {
-      const canvas = canvasRef.current;
-      if (!canvas) return { row: -1, col: -1 };
-
-      const rect = canvas.getBoundingClientRect();
-
-      const x = clientX - rect.left;
-      const y = clientY - rect.top;
-
-      const col = Math.floor(x / cellSize);
-      const row = Math.floor(y / cellSize);
-
-      return { row, col };
-    },
-    [cellSize]
-  );
-
-  const handleCanvasClick = useCallback(
-    (event: MouseEvent) => {
-      const { row, col } = getCellCoordinates(event.clientX, event.clientY);
-
-      if (row >= 0 && col >= 0 && row < fieldSize && col < fieldSize) {
-        const creature = cells[`${row},${col}`];
-
-        if (creature?.Alive) {
-          creature.Kill();
-
-          updateCreature(creature);
-        } else {
-          updateCreature(new Creature(row, col, true));
-        }
-      }
-    },
-    [fieldSize, getCellCoordinates, cells]
-  );
+  useWatchUpdatedCreature(canvasRef);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    let animationFrameId: number;
+    let lastFrameTime = performance.now();
+    const fps = 30; // Altere para 60, 24, etc.
+    const frameDuration = 1000 / fps;
 
-    canvas.addEventListener("click", handleCanvasClick);
+    const render = (time: number) => {
+      const delta = time - lastFrameTime;
 
-    return () => {
-      canvas.removeEventListener("click", handleCanvasClick);
+      if (delta >= frameDuration) {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        grid.forEach((row, rowIndex) => {
+          row.forEach((_, colIndex) => {
+            const x = colIndex * CELL_SIZE;
+            const y = rowIndex * CELL_SIZE;
+
+            const creature = cells[`${rowIndex},${colIndex}`];
+
+            if (creature) {
+              verifyCreatureState(creature, cells, FIELD_SIZE, updateCreature);
+            }
+
+            ctx.fillStyle = creature?.Alive ? "black" : "white";
+            ctx.beginPath();
+            ctx.roundRect(x, y, CELL_SIZE, CELL_SIZE);
+            ctx.fill();
+            ctx.stroke();
+          });
+        });
+
+        lastFrameTime = time;
+      }
+
+      animationFrameId = requestAnimationFrame(render);
     };
-  }, [handleCanvasClick]);
+
+    if (running) {
+      animationFrameId = requestAnimationFrame(render);
+    }
+
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [grid, cells, running, FIELD_SIZE]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -74,17 +81,17 @@ export const useFieldControl = (fieldSize: number) => {
 
     grid.forEach((row, rowIndex) => {
       row.forEach((_, colIndex) => {
-        const x = colIndex * cellSize;
-        const y = rowIndex * cellSize;
-        const size = cellSize;
+        const x = colIndex * CELL_SIZE;
+        const y = rowIndex * CELL_SIZE;
+        const size = CELL_SIZE;
 
         ctx.fillStyle = cells[`${rowIndex},${colIndex}`]?.Alive
           ? "black"
           : "white";
         ctx.beginPath();
         ctx.roundRect(
-          x + (cellSize - size) / 2,
-          y + (cellSize - size) / 2,
+          x + (CELL_SIZE - size) / 2,
+          y + (CELL_SIZE - size) / 2,
           size,
           size
         );
@@ -92,11 +99,11 @@ export const useFieldControl = (fieldSize: number) => {
         ctx.stroke();
       });
     });
-  }, [grid, fieldSize, cells]);
+  }, []);
 
   useEffect(() => {
-    setGrid(drawGrid(fieldSize));
-  }, [fieldSize]);
+    setGrid(drawGrid());
+  }, [FIELD_SIZE]);
 
-  return { grid, setGrid, canvasRef, getCellCoordinates };
+  return { grid, setGrid, canvasRef };
 };
