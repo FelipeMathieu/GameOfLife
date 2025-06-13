@@ -77,7 +77,7 @@ const GameInfo: React.FC<IGameInfo> = ({ onNextGeneration }) => {
           onClick={onNextGeneration}
           variant="filled"
           icon={<ForwardOutlined />}
-          disabled={running}
+          disabled={running || population < 1}
         />
       </Flex>
     </Flex>

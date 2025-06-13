@@ -23,13 +23,10 @@ const Field = () => {
 
   const step = () => {
     values(cells).forEach((cell) => {
-      verifyCreatureState({
-        cell,
-        cells,
-        fieldSize: FIELD_SIZE,
-        updateCreatureCallback: updateCreature,
-      });
+      verifyCreatureState(cell, cells);
     });
+
+    batchUpdate(values(cells));
 
     layerRef.current?.batchDraw();
   };
@@ -37,22 +34,8 @@ const Field = () => {
   useEffect(() => {
     const creatures: ICreature[] = [];
     setLoading(true);
-    for (let x = 0; x < FIELD_SIZE; x++) {
-      for (let y = 0; y < FIELD_SIZE; y++) {
-        creatures.push(new Creature(x, y, false));
-      }
-    }
-
-    setLoading(false);
-    batchUpdate(creatures);
-  }, [FIELD_SIZE]);
-
-  useEffect(() => {
-    const creatures: ICreature[] = [];
-
-    setLoading(true);
-    for (let x = 0; x < FIELD_SIZE; x++) {
-      for (let y = 0; y < FIELD_SIZE; y++) {
+    for (let y = 0; y < FIELD_SIZE; y++) {
+      for (let x = 0; x < FIELD_SIZE; x++) {
         creatures.push(new Creature(x, y, false));
       }
     }
@@ -60,7 +43,7 @@ const Field = () => {
     batchUpdate(creatures);
     layerRef.current?.batchDraw();
     setLoading(false);
-  }, []);
+  }, [FIELD_SIZE]);
 
   useGameLoop(step, FPS);
 
