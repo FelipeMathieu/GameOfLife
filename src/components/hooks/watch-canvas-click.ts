@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
-import { CELL_SIZE, FIELD_SIZE } from "../../common/constants";
-import { useCreatures, useUpdatedCreature } from "../../core/store";
+import { CELL_SIZE } from "../../common/constants";
+import { useCreatures, useRunning, useUpdatedCreature } from "../../core/store";
 import { Creature } from "../../common/models";
 
 export const useWatchCanvasClick = (
@@ -8,8 +8,7 @@ export const useWatchCanvasClick = (
 ) => {
   const { cells } = useCreatures();
   const { updateCreature } = useUpdatedCreature();
-
-  console.log("** cells", cells);
+  const { running } = useRunning();
 
   const getCanvasCoordinates = (
     canvas: HTMLCanvasElement,
@@ -28,31 +27,33 @@ export const useWatchCanvasClick = (
 
   const handleCanvasClick = useCallback(
     (event: MouseEvent) => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
+      if (!running) {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
 
-      const { canvasX, canvasY } = getCanvasCoordinates(
-        canvas,
-        event.clientX,
-        event.clientY
-      );
+        const { canvasX, canvasY } = getCanvasCoordinates(
+          canvas,
+          event.clientX,
+          event.clientY
+        );
 
-      const col = Math.floor(canvasY / CELL_SIZE);
-      const row = Math.floor(canvasX / CELL_SIZE);
+        const col = Math.floor(canvasY / CELL_SIZE);
+        const row = Math.floor(canvasX / CELL_SIZE);
 
-      if (row >= 0 && col >= 0) {
-        const creature = cells[`${row},${col}`];
+        if (row >= 0 && col >= 0) {
+          const creature = cells[`${row},${col}`];
 
-        if (creature?.Alive) {
-          creature.Kill();
+          if (creature?.Alive) {
+            creature.Kill();
 
-          updateCreature(creature);
-        } else {
-          updateCreature(new Creature(row, col, true));
+            updateCreature(creature);
+          } else {
+            updateCreature(new Creature(row, col, true));
+          }
         }
       }
     },
-    [FIELD_SIZE, CELL_SIZE, cells]
+    [CELL_SIZE, cells, running]
   );
 
   useEffect(() => {

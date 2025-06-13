@@ -1,11 +1,12 @@
 import { Button, Col, Flex, Row, Typography } from "antd";
 import { usePopulation } from "../core/store";
 import { PauseOutlined, PlayCircleOutlined } from "@ant-design/icons";
-import { useRunning } from "../core/store/game-ui-store";
+import { useGenerations, useRunning } from "../core/store/game-ui-store";
 
 const GameInfo: React.FC = () => {
   const population = usePopulation();
   const { running, updateRunning } = useRunning();
+  const { generations } = useGenerations();
 
   const onPlay = () => {
     updateRunning(true);
@@ -20,6 +21,7 @@ const GameInfo: React.FC = () => {
       <Col span={24}>
         <Flex align="center" justify="space-evenly">
           <Typography.Text>Population: {population}</Typography.Text>
+          <Typography.Text>Generations: {generations}</Typography.Text>
         </Flex>
       </Col>
       <Col span={24}>

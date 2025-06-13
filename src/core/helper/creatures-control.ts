@@ -2,15 +2,23 @@ import type { ICreature } from "../../common/interfaces";
 import type { TCreatures } from "../../common/types";
 import { getNeighbors } from "./get-neighbors";
 
-export const verifyCreatureState = (
-  cell: ICreature,
-  cells: TCreatures,
-  fieldSize: number,
-  updateCreatureCallback: (cell: ICreature) => void
-) => {
+interface IVerifyCreatureState {
+  cell: ICreature;
+  cells: TCreatures;
+  fieldSize: number;
+  updateCreatureCallback: (cell: ICreature) => void;
+  handleNeighborsCallback: (cells: ICreature[]) => void;
+}
+
+export const verifyCreatureState = ({
+  cell,
+  cells,
+  fieldSize,
+  updateCreatureCallback,
+}: IVerifyCreatureState) => {
   const cellNeighbors = getNeighbors(cells, cell, fieldSize);
 
-  console.log("** neighbors of", cell, cellNeighbors);
+  cellNeighbors.forEach((item) => updateCreatureCallback(item));
 
   if (
     cell.Alive &&

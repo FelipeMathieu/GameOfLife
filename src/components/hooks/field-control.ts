@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { useCreatures, useRunning, useUpdatedCreature } from "../../core/store";
-import { verifyCreatureState } from "../../core/helper/creatures-control";
+import { useCreatures } from "../../core/store";
 import { CELL_SIZE, FIELD_SIZE } from "../../common/constants";
 import { useWatchUpdatedCreature } from "./watch-updated-creature";
 import { useWatchCanvasClick } from "./watch-canvas-click";
+import { useCanvasRender } from "./canvas-render";
 
 const drawGrid = () =>
   Array(FIELD_SIZE)
@@ -13,64 +13,15 @@ const drawGrid = () =>
 export const useFieldControl = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { cells } = useCreatures();
-  const { updateCreature } = useUpdatedCreature();
-  const { running } = useRunning();
+  const [grid] = useState<null[][]>(drawGrid());
 
-  const [grid, setGrid] = useState<null[][]>(drawGrid());
+  console.log("** cells", cells);
 
   useWatchCanvasClick(canvasRef);
 
   useWatchUpdatedCreature(canvasRef);
 
-  useEffect(() => {
-    let animationFrameId: number;
-    let lastFrameTime = performance.now();
-    const fps = 30; // Altere para 60, 24, etc.
-    const frameDuration = 1000 / fps;
-
-    const render = (time: number) => {
-      const delta = time - lastFrameTime;
-
-      if (delta >= frameDuration) {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        grid.forEach((row, rowIndex) => {
-          row.forEach((_, colIndex) => {
-            const x = colIndex * CELL_SIZE;
-            const y = rowIndex * CELL_SIZE;
-
-            const creature = cells[`${rowIndex},${colIndex}`];
-
-            if (creature) {
-              verifyCreatureState(creature, cells, FIELD_SIZE, updateCreature);
-            }
-
-            ctx.fillStyle = creature?.Alive ? "black" : "white";
-            ctx.beginPath();
-            ctx.roundRect(x, y, CELL_SIZE, CELL_SIZE);
-            ctx.fill();
-            ctx.stroke();
-          });
-        });
-
-        lastFrameTime = time;
-      }
-
-      animationFrameId = requestAnimationFrame(render);
-    };
-
-    if (running) {
-      animationFrameId = requestAnimationFrame(render);
-    }
-
-    return () => cancelAnimationFrame(animationFrameId);
-  }, [grid, cells, running, FIELD_SIZE]);
+  useCanvasRender(canvasRef, grid);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -101,9 +52,5 @@ export const useFieldControl = () => {
     });
   }, []);
 
-  useEffect(() => {
-    setGrid(drawGrid());
-  }, [FIELD_SIZE]);
-
-  return { grid, setGrid, canvasRef };
+  return canvasRef;
 };

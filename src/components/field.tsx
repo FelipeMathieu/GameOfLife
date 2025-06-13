@@ -5,7 +5,7 @@ import GameInfo from "./game-info";
 import { CELL_SIZE, FIELD_SIZE } from "../common/constants";
 
 const Field = () => {
-  const { canvasRef } = useFieldControl();
+  const canvasRef = useFieldControl();
 
   return (
     <StyledCard>
