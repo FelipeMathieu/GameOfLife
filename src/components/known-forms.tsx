@@ -86,7 +86,13 @@ const KnownForms = () => {
   };
 
   return (
-    <Flex style={{ width: "100%" }} align="center" gap={10} wrap>
+    <Flex
+      style={{ width: "100%" }}
+      align="center"
+      justify="center"
+      gap={10}
+      wrap
+    >
       <Card
         style={{ padding: 0, background: color(selectedForm === "block") }}
         hoverable={!running}
