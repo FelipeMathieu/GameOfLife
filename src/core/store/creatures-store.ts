@@ -46,6 +46,8 @@ const store = create(
   }))
 );
 
+export const useCreaturesStore = store;
+
 export const useCreatures = () => {
   const cells = store((state) => state.cells);
   const cellsSub = (callback: (cells: TCreatures) => void) =>

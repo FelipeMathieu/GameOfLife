@@ -1,10 +1,9 @@
 import { useEffect, useRef } from "react";
-import { useGenerations, useRunning } from "../../core/store";
+import { useRunning } from "../../core/store";
 
 type GameLoopCallback = () => void;
 
 export function useGameLoop(callback: GameLoopCallback, fps = 30) {
-  const { nextGeneration } = useGenerations();
   const { running } = useRunning();
   const requestRef = useRef<number>(0);
   const lastTimeRef = useRef(performance.now());
@@ -14,7 +13,6 @@ export function useGameLoop(callback: GameLoopCallback, fps = 30) {
     const delta = time - lastTimeRef.current;
     if (delta >= frameDuration) {
       callback();
-      nextGeneration();
       lastTimeRef.current = time;
     }
     requestRef.current = requestAnimationFrame(animate);

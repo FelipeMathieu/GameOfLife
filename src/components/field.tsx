@@ -5,35 +5,53 @@ import { CELL_SIZE, FIELD_SIZE } from "../common/constants";
 import { Layer, Rect, Stage } from "react-konva";
 import { useEffect, useRef, useState } from "react";
 import { Creature } from "../common/models";
-import { useCreatures, useRunning, useUpdatedCreature } from "../core/store";
+import {
+  useCreatures,
+  useCreaturesStore,
+  useGenerations,
+  useRunning,
+  useUpdatedCreature,
+} from "../core/store";
 import type { ICreature } from "../common/interfaces";
 import { useGameLoop } from "./hooks/canvas-render";
-import { values } from "lodash";
+import { clone, isEmpty, values } from "lodash";
 import { verifyCreatureState } from "../core/helper/creatures-control";
+import type { Layer as KonvaLayer } from "konva/lib/Layer";
 
 const FPS = 30;
 
 const Field = () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const layerRef = useRef<any>(null);
   const { cells, batchUpdate } = useCreatures();
+  const layerRef = useRef<KonvaLayer | null>(null);
+  const { nextGeneration } = useGenerations();
   const { running } = useRunning();
   const { updateCreature } = useUpdatedCreature();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const step = () => {
-    values(cells).forEach((cell) => {
-      verifyCreatureState(cell, cells);
+    const creatures = useCreaturesStore.getState().cells;
+    const updatedCells: ICreature[] = [];
+
+    values(creatures).forEach((cell) => {
+      const clonedCell = clone(cell);
+      verifyCreatureState(clonedCell, creatures);
+
+      if (cell.Alive !== clonedCell.Alive) {
+        updatedCells.push(clonedCell);
+      }
     });
 
-    batchUpdate(values(cells));
+    if (!isEmpty(updatedCells)) {
+      batchUpdate(updatedCells);
+    }
 
+    nextGeneration();
     layerRef.current?.batchDraw();
   };
 
   useEffect(() => {
     const creatures: ICreature[] = [];
-    setLoading(true);
+
     for (let y = 0; y < FIELD_SIZE; y++) {
       for (let x = 0; x < FIELD_SIZE; x++) {
         creatures.push(new Creature(x, y, false));
@@ -41,8 +59,9 @@ const Field = () => {
     }
 
     batchUpdate(creatures);
-    layerRef.current?.batchDraw();
     setLoading(false);
+
+    layerRef.current?.batchDraw();
   }, [FIELD_SIZE]);
 
   useGameLoop(step, FPS);
