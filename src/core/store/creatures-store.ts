@@ -37,10 +37,12 @@ const store = create(
           creature.Kill();
           return creature;
         });
+
         return {
           cells: {
             ...keyBy(deadCreatures, (item) => `${item.X},${item.Y}`),
           },
+          maxPopulation: 0,
         };
       }),
   }))
@@ -60,7 +62,9 @@ export const useCreatures = () => {
 
 export const usePopulation = () => {
   const { cells } = useCreatures();
-  return values(cells).filter((item) => item.Alive).length;
+  const population = values(cells).filter((item) => item.Alive).length;
+
+  return { population };
 };
 
 export const useUpdatedCreature = () => {

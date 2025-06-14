@@ -1,9 +1,9 @@
 import { useEffect, useRef } from "react";
 import { useRunning } from "../../core/store";
 
-type GameLoopCallback = () => void;
+type TGameLoopCallback = () => void;
 
-export function useGameLoop(callback: GameLoopCallback, fps = 30) {
+export function useGameLoop(callback: TGameLoopCallback, fps = 30) {
   const { running } = useRunning();
   const requestRef = useRef<number>(0);
   const lastTimeRef = useRef(performance.now());

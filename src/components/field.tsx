@@ -1,5 +1,4 @@
-import { StyledCard } from "./styled/card.style";
-import { Flex } from "antd";
+import { Card, Flex } from "antd";
 import GameInfo from "./game-info";
 import { CELL_SIZE, FIELD_SIZE } from "../common/constants";
 import { Layer, Rect, Stage } from "react-konva";
@@ -17,8 +16,9 @@ import { useGameLoop } from "./hooks/canvas-render";
 import { clone, isEmpty, values } from "lodash";
 import { verifyCreatureState } from "../core/helper/creatures-control";
 import type { Layer as KonvaLayer } from "konva/lib/Layer";
+import KnownForms from "./known-forms";
 
-const FPS = 30;
+const FPS = 60;
 
 const Field = () => {
   const { cells, batchUpdate } = useCreatures();
@@ -89,15 +89,17 @@ const Field = () => {
   useGameLoop(step, FPS);
 
   return (
-    <StyledCard loading={loading}>
-      <Flex vertical gap={10} align="center" justify="center">
+    <Card loading={loading}>
+      <Flex vertical gap={20} align="center" justify="center">
         <GameInfo onNextGeneration={step} />
+
+        <KnownForms />
 
         <Stage width={FIELD_SIZE * CELL_SIZE} height={FIELD_SIZE * CELL_SIZE}>
           <Layer ref={layerRef}>{rects}</Layer>
         </Stage>
       </Flex>
-    </StyledCard>
+    </Card>
   );
 };
 

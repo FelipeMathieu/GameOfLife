@@ -1,5 +1,4 @@
 import { Flex } from "antd";
-import "./App.css";
 import Field from "./components/field";
 import Header from "./components/header";
 

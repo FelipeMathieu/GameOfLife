@@ -14,7 +14,7 @@ interface IGameInfo {
 
 const GameInfo: React.FC<IGameInfo> = ({ onNextGeneration }) => {
   const { killAll } = useCreatures();
-  const population = usePopulation();
+  const { population } = usePopulation();
   const { running, updateRunning } = useRunning();
   const { generations, reset } = useGenerations();
 
@@ -41,7 +41,7 @@ const GameInfo: React.FC<IGameInfo> = ({ onNextGeneration }) => {
       gap={10}
     >
       <Row
-        gutter={[8, 8]}
+        gutter={[5, 5]}
         style={{
           width: "100%",
         }}
