@@ -6,7 +6,9 @@ import { subscribeWithSelector } from "zustand/middleware";
 
 interface IState {
   cells: TCreatures;
+  maxPopulation: number;
   updatedCreature: ICreature | null;
+  updateMaxPopulation: (value: number) => void;
   updateCreature: (creature: ICreature) => void;
   batchUpdate: (creatures: ICreature[]) => void;
   killAll: () => void;
@@ -16,6 +18,9 @@ const store = create(
   subscribeWithSelector<IState>((set) => ({
     cells: {},
     updatedCreature: null,
+    maxPopulation: 0,
+    updateMaxPopulation: (value: number) =>
+      set(() => ({ maxPopulation: value })),
     updateCreature: (creature: ICreature) =>
       set((state) => ({
         cells: {
@@ -63,8 +68,10 @@ export const useCreatures = () => {
 export const usePopulation = () => {
   const { cells } = useCreatures();
   const population = values(cells).filter((item) => item.Alive).length;
+  const maxPopulation = store((state) => state.maxPopulation);
+  const updateMaxPopulation = store((state) => state.updateMaxPopulation);
 
-  return { population };
+  return { population, maxPopulation, updateMaxPopulation };
 };
 
 export const useUpdatedCreature = () => {

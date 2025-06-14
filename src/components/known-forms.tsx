@@ -11,6 +11,18 @@ import {
 } from "../core/helper";
 import { buildLightweightSpaceship } from "../core/helper/build-lightweight-spaceship";
 
+const images = {
+  block: new URL("../assets/block.png", import.meta.url).href,
+  boat: new URL("../assets/boat.png", import.meta.url).href,
+  blinker: new URL("../assets/blinker.png", import.meta.url).href,
+  toad: new URL("../assets/toad.png", import.meta.url).href,
+  glider: new URL("../assets/glider.png", import.meta.url).href,
+  "lightweight-spaceship": new URL(
+    "../assets/lightweight-spaceship.png",
+    import.meta.url
+  ).href,
+};
+
 const CENTER = Math.floor(FIELD_SIZE / 2);
 
 const SELECTED = "#e6f4ff";
@@ -81,7 +93,7 @@ const KnownForms = () => {
         onClick={() => onClick("block")}
       >
         <Flex justify="center" align="center">
-          <img alt="block" src="/src/assets/block.png" />
+          <img alt="block" src={images.block} />
         </Flex>
       </Card>
 
@@ -91,7 +103,7 @@ const KnownForms = () => {
         onClick={() => onClick("boat")}
       >
         <Flex justify="center" align="center">
-          <img alt="block" src="/src/assets/boat.png" />
+          <img alt="boat" src={images.boat} />
         </Flex>
       </Card>
 
@@ -101,7 +113,7 @@ const KnownForms = () => {
         onClick={() => onClick("blinker")}
       >
         <Flex justify="center" align="center">
-          <img alt="block" src="/src/assets/blinker.png" />
+          <img alt="blinker" src={images.blinker} />
         </Flex>
       </Card>
 
@@ -111,7 +123,7 @@ const KnownForms = () => {
         onClick={() => onClick("toad")}
       >
         <Flex justify="center" align="center">
-          <img alt="block" src="/src/assets/toad.png" />
+          <img alt="toad" src={images.toad} />
         </Flex>
       </Card>
 
@@ -121,7 +133,7 @@ const KnownForms = () => {
         onClick={() => onClick("glider")}
       >
         <Flex justify="center" align="center">
-          <img alt="block" src="/src/assets/glider.png" />
+          <img alt="glider" src={images.glider} />
         </Flex>
       </Card>
 
@@ -134,7 +146,10 @@ const KnownForms = () => {
         onClick={() => onClick("lightweight-spaceship")}
       >
         <Flex justify="center" align="center">
-          <img alt="block" src="/src/assets/lightweight-spaceship.png" />
+          <img
+            alt="lightweight-spaceship"
+            src={images["lightweight-spaceship"]}
+          />
         </Flex>
       </Card>
     </Flex>

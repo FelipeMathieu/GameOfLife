@@ -7,6 +7,7 @@ import {
   PlayCircleOutlined,
 } from "@ant-design/icons";
 import { useGenerations, useRunning } from "../core/store/game-ui-store";
+import { useWatchMaxPopulation } from "./hooks/watch-max-population";
 
 interface IGameInfo {
   onNextGeneration: () => void;
@@ -14,7 +15,7 @@ interface IGameInfo {
 
 const GameInfo: React.FC<IGameInfo> = ({ onNextGeneration }) => {
   const { killAll } = useCreatures();
-  const { population } = usePopulation();
+  const { population, maxPopulation } = usePopulation();
   const { running, updateRunning } = useRunning();
   const { generations, reset } = useGenerations();
 
@@ -31,6 +32,8 @@ const GameInfo: React.FC<IGameInfo> = ({ onNextGeneration }) => {
     reset();
   };
 
+  useWatchMaxPopulation();
+
   return (
     <Flex
       vertical
@@ -46,6 +49,11 @@ const GameInfo: React.FC<IGameInfo> = ({ onNextGeneration }) => {
           width: "100%",
         }}
       >
+        <Col span={24}>
+          <Typography.Text>
+            Max population reached: {maxPopulation}
+          </Typography.Text>
+        </Col>
         <Col span={24}>
           <Typography.Text>Population: {population}</Typography.Text>
         </Col>

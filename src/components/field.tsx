@@ -18,7 +18,7 @@ import { verifyCreatureState } from "../core/helper/creatures-control";
 import type { Layer as KonvaLayer } from "konva/lib/Layer";
 import KnownForms from "./known-forms";
 
-const FPS = 60;
+const FPS = 30;
 
 const Field = () => {
   const { cells, batchUpdate } = useCreatures();
