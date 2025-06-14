@@ -78,11 +78,11 @@ const KnownForms = () => {
   };
 
   const onClick = (form: TKnownForms) => {
-    killAll();
-
-    buildForm(form);
-
-    setSelectedForm(form);
+    if (!running) {
+      killAll();
+      buildForm(form);
+      setSelectedForm(form);
+    }
   };
 
   return (
