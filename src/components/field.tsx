@@ -3,7 +3,7 @@ import { Flex } from "antd";
 import GameInfo from "./game-info";
 import { CELL_SIZE, FIELD_SIZE } from "../common/constants";
 import { Layer, Rect, Stage } from "react-konva";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Creature } from "../common/models";
 import {
   useCreatures,
@@ -28,6 +28,28 @@ const Field = () => {
   const { updateCreature } = useUpdatedCreature();
   const [loading, setLoading] = useState(true);
 
+  const rects = useMemo(() => {
+    return values(cells).map((cell) => (
+      <Rect
+        key={`${cell.X},${cell.Y}`}
+        x={cell.X * CELL_SIZE}
+        y={cell.Y * CELL_SIZE}
+        width={CELL_SIZE}
+        height={CELL_SIZE}
+        fill={cell.Alive ? "black" : "white"}
+        stroke="gray"
+        onClick={() => {
+          if (!running) {
+            if (cell.Alive) cell.Kill();
+            else cell.Revive();
+
+            updateCreature(cell);
+          }
+        }}
+      />
+    ));
+  }, [cells, running]);
+
   const step = () => {
     const creatures = useCreaturesStore.getState().cells;
     const updatedCells: ICreature[] = [];
@@ -36,17 +58,17 @@ const Field = () => {
       const clonedCell = clone(cell);
       verifyCreatureState(clonedCell, creatures);
 
-      if (cell.Alive !== clonedCell.Alive) {
+      if (clonedCell.Alive !== cell.Alive) {
         updatedCells.push(clonedCell);
       }
     });
 
     if (!isEmpty(updatedCells)) {
       batchUpdate(updatedCells);
+      layerRef.current?.batchDraw();
     }
 
     nextGeneration();
-    layerRef.current?.batchDraw();
   };
 
   useEffect(() => {
@@ -72,32 +94,7 @@ const Field = () => {
         <GameInfo onNextGeneration={step} />
 
         <Stage width={FIELD_SIZE * CELL_SIZE} height={FIELD_SIZE * CELL_SIZE}>
-          <Layer ref={layerRef}>
-            <>
-              {values(cells).map((cell) => (
-                <Rect
-                  key={`${cell.X},${cell.Y}`}
-                  x={cell.X * CELL_SIZE}
-                  y={cell.Y * CELL_SIZE}
-                  width={CELL_SIZE}
-                  height={CELL_SIZE}
-                  fill={cell.Alive ? "back" : "white"}
-                  stroke="gray"
-                  onClick={() => {
-                    if (!running) {
-                      if (cell.Alive) {
-                        cell.Kill();
-                      } else {
-                        cell.Revive();
-                      }
-
-                      updateCreature(cell);
-                    }
-                  }}
-                />
-              ))}
-            </>
-          </Layer>
+          <Layer ref={layerRef}>{rects}</Layer>
         </Stage>
       </Flex>
     </StyledCard>
