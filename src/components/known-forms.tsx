@@ -1,7 +1,12 @@
 import { Card, Flex } from "antd";
 import { FIELD_SIZE } from "../common/constants";
 import { memo, useEffect, useState } from "react";
-import { useCreatures, usePopulation, useRunning } from "../core/store";
+import {
+  useCreatures,
+  useGenerations,
+  usePopulation,
+  useRunning,
+} from "../core/store";
 import {
   buildBlinker,
   buildBlock,
@@ -38,6 +43,7 @@ const color = (isSelected: boolean) => (isSelected ? SELECTED : "white");
 
 const KnownForms = () => {
   const { running } = useRunning();
+  const { reset } = useGenerations();
   const { population } = usePopulation();
   const { killAll, cells, batchUpdate } = useCreatures();
   const [selectedForm, setSelectedForm] = useState<TKnownForms>();
@@ -80,6 +86,7 @@ const KnownForms = () => {
   const onClick = (form: TKnownForms) => {
     if (!running) {
       killAll();
+      reset();
       buildForm(form);
       setSelectedForm(form);
     }

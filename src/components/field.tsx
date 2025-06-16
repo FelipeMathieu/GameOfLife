@@ -22,7 +22,7 @@ const Field = () => {
   const [rects, setRects] = useState<JSX.Element[]>([]);
   const { running } = useRunning();
 
-  useWatchCreatures(rectsRef);
+  useWatchCreatures(layerRef, rectsRef);
 
   const animate = useGameLoop();
 
