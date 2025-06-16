@@ -1,30 +1,52 @@
 import { useEffect, useRef } from "react";
 import { useRunning } from "../../core/store";
+import type { Layer as KonvaLayer } from "konva/lib/Layer";
+import { useRenderStep } from "./render-step";
 
-type TGameLoopCallback = () => void;
-
-export function useGameLoop(callback: TGameLoopCallback, fps = 30) {
-  const { running } = useRunning();
+export function useGameLoop(
+  layerRef: React.RefObject<KonvaLayer | null>,
+  fps = 30
+) {
+  const manualRunRef = useRef(false);
+  const { running, updateRunning } = useRunning();
   const requestRef = useRef<number>(0);
   const lastTimeRef = useRef(performance.now());
   const frameDuration = 1000 / fps;
 
-  const animate = (time: number) => {
+  const step = useRenderStep(layerRef);
+
+  const animate = (time: number, times?: number, iteration: number = 1) => {
+    if (times && !manualRunRef.current) {
+      manualRunRef.current = true;
+    }
+
+    if (times && iteration > times) {
+      manualRunRef.current = false;
+      updateRunning(false);
+      return;
+    }
+
     const delta = time - lastTimeRef.current;
     if (delta >= frameDuration) {
-      callback();
+      step();
       lastTimeRef.current = time;
     }
-    requestRef.current = requestAnimationFrame(animate);
+
+    requestRef.current = requestAnimationFrame((newTime) =>
+      animate(newTime, times, iteration + 1)
+    );
   };
 
   useEffect(() => {
-    if (running) {
+    if (running && !manualRunRef.current) {
       requestRef.current = requestAnimationFrame(animate);
     }
 
     return () => {
-      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      if (!manualRunRef.current && requestRef.current)
+        cancelAnimationFrame(requestRef.current);
     };
-  }, [running, fps]);
+  }, [running, fps, manualRunRef.current]);
+
+  return animate;
 }

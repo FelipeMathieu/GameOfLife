@@ -2,31 +2,34 @@ import { Card, Flex } from "antd";
 import GameInfo from "./game-info";
 import { CELL_SIZE, FIELD_SIZE } from "../common/constants";
 import { Layer, Rect, Stage } from "react-konva";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Creature } from "../common/models";
-import {
-  useCreatures,
-  useCreaturesStore,
-  useGenerations,
-  useRunning,
-  useUpdatedCreature,
-} from "../core/store";
+import { useCreatures, useRunning } from "../core/store";
 import type { ICreature } from "../common/interfaces";
 import { useGameLoop } from "./hooks/canvas-render";
-import { clone, isEmpty, values } from "lodash";
-import { verifyCreatureState } from "../core/helper/creatures-control";
+import { values } from "lodash";
 import type { Layer as KonvaLayer } from "konva/lib/Layer";
 import KnownForms from "./known-forms";
 
 const FPS = 30;
 
 const Field = () => {
-  const { cells, batchUpdate } = useCreatures();
+  const { cells, batchUpdate, updateCreature } = useCreatures();
   const layerRef = useRef<KonvaLayer | null>(null);
-  const { nextGeneration } = useGenerations();
   const { running } = useRunning();
-  const { updateCreature } = useUpdatedCreature();
   const [loading, setLoading] = useState(true);
+  const [states, setStates] = useState(1);
+
+  const animate = useGameLoop(layerRef, FPS);
+
+  const onCellClick = (cell: ICreature) => {
+    if (!running) {
+      if (cell.Alive) cell.Kill();
+      else cell.Revive();
+
+      updateCreature(cell);
+    }
+  };
 
   const rects = useMemo(() => {
     return values(cells).map((cell) => (
@@ -38,38 +41,20 @@ const Field = () => {
         height={CELL_SIZE}
         fill={cell.Alive ? "black" : "white"}
         stroke="gray"
-        onClick={() => {
-          if (!running) {
-            if (cell.Alive) cell.Kill();
-            else cell.Revive();
-
-            updateCreature(cell);
-          }
-        }}
+        onClick={() => onCellClick(cell)}
+        onTap={() => onCellClick(cell)}
       />
     ));
   }, [cells, running]);
 
-  const step = () => {
-    const creatures = useCreaturesStore.getState().cells;
-    const updatedCells: ICreature[] = [];
-
-    values(creatures).forEach((cell) => {
-      const clonedCell = clone(cell);
-      verifyCreatureState(clonedCell, creatures);
-
-      if (clonedCell.Alive !== cell.Alive) {
-        updatedCells.push(clonedCell);
+  const onNextGeneration = useCallback(
+    (times?: number) => {
+      if (!running) {
+        animate(performance.now(), times || states);
       }
-    });
-
-    if (!isEmpty(updatedCells)) {
-      batchUpdate(updatedCells);
-      layerRef.current?.batchDraw();
-    }
-
-    nextGeneration();
-  };
+    },
+    [states, running, animate]
+  );
 
   useEffect(() => {
     const creatures: ICreature[] = [];
@@ -86,12 +71,14 @@ const Field = () => {
     layerRef.current?.batchDraw();
   }, [FIELD_SIZE]);
 
-  useGameLoop(step, FPS);
-
   return (
     <Card loading={loading}>
       <Flex vertical gap={20} align="center" justify="center">
-        <GameInfo onNextGeneration={step} />
+        <GameInfo
+          states={states}
+          setStates={setStates}
+          onNextGeneration={onNextGeneration}
+        />
 
         <KnownForms />
 
