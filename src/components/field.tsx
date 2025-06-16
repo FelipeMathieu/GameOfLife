@@ -2,7 +2,7 @@ import { Card, Flex } from "antd";
 import GameInfo from "./game-info";
 import { CELL_SIZE, FIELD_SIZE } from "../common/constants";
 import { Layer, Rect, Stage } from "react-konva";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Creature } from "../common/models";
 import { useCreatures, useRunning } from "../core/store";
 import type { ICreature } from "../common/interfaces";
@@ -46,14 +46,11 @@ const Field = () => {
     ));
   }, [cells, running]);
 
-  const onNextGeneration = useCallback(
-    (times?: number) => {
-      if (!running) {
-        animate(performance.now(), times || states);
-      }
-    },
-    [states, running, animate]
-  );
+  const onNextGeneration = (times?: number) => {
+    if (!running) {
+      animate(performance.now(), times || states);
+    }
+  };
 
   useEffect(() => {
     const creatures: ICreature[] = [];

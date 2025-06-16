@@ -41,7 +41,7 @@ export function useGameLoop(layerRef: React.RefObject<KonvaLayer | null>) {
     }
 
     return () => {
-      if (!manualRunRef.current && requestRef.current)
+      if (!running && requestRef.current)
         cancelAnimationFrame(requestRef.current);
     };
   }, [running, fps, manualRunRef.current]);
