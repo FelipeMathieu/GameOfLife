@@ -1,9 +1,12 @@
 import { create } from "zustand";
 import { useShallow } from "zustand/shallow";
+import { FPS } from "../../common/constants";
 
 interface IState {
   running: boolean;
   generations: number;
+  fps: number;
+  updateFps: (value: number) => void;
   updateRunning: (value: boolean) => void;
   nextGeneration: () => void;
   reset: () => void;
@@ -12,6 +15,8 @@ interface IState {
 const store = create<IState>((set) => ({
   running: false,
   generations: 0,
+  fps: FPS,
+  updateFps: (value: number) => set(() => ({ fps: value })),
   updateRunning: (value: boolean) => set(() => ({ running: value })),
   nextGeneration: () =>
     set((state) => ({ generations: state.generations + 1 })),
@@ -20,9 +25,10 @@ const store = create<IState>((set) => ({
 
 export const useRunning = () => {
   const running = store(useShallow((state) => state.running));
-  const updateRunning = store((state) => state.updateRunning);
+  const fps = store(useShallow((state) => state.fps));
+  const { updateRunning, updateFps } = store.getState();
 
-  return { running, updateRunning };
+  return { running, fps, updateRunning, updateFps };
 };
 
 export const useGenerations = () => {

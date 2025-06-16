@@ -1,4 +1,14 @@
-import { Button, Col, Flex, InputNumber, Row, Typography } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Flex,
+  InputNumber,
+  Row,
+  Slider,
+  Statistic,
+  Typography,
+} from "antd";
 import { useCreatures, usePopulation } from "../core/store";
 import {
   ClearOutlined,
@@ -23,7 +33,7 @@ const GameInfo: React.FC<IGameInfo> = ({
 }) => {
   const { killAll } = useCreatures();
   const { population, maxPopulation } = usePopulation();
-  const { running, updateRunning } = useRunning();
+  const { running, updateRunning, fps, updateFps } = useRunning();
   const { generations, reset } = useGenerations();
 
   const onPlay = () => {
@@ -50,24 +60,43 @@ const GameInfo: React.FC<IGameInfo> = ({
       style={{
         width: "100%",
       }}
-      gap={10}
+      gap={25}
     >
+      <Row style={{ width: "100%" }}>
+        <Col style={{ width: "100%" }}>
+          <Flex vertical align="center" style={{ width: "100%" }}>
+            <Typography.Text type="secondary">FPS {fps}:</Typography.Text>
+            <Slider
+              min={1}
+              defaultValue={fps}
+              max={120}
+              style={{ width: "100%" }}
+              onChange={updateFps}
+            />
+          </Flex>
+        </Col>
+      </Row>
       <Row
         gutter={[5, 5]}
         style={{
           width: "100%",
         }}
+        wrap
       >
-        <Col span={24}>
-          <Typography.Text>
-            Max population reached: {maxPopulation}
-          </Typography.Text>
+        <Col span={8}>
+          <Card>
+            <Statistic title="Max population reached:" value={maxPopulation} />
+          </Card>
         </Col>
-        <Col span={24}>
-          <Typography.Text>Population: {population}</Typography.Text>
+        <Col span={8}>
+          <Card>
+            <Statistic title="Population:" value={population} />
+          </Card>
         </Col>
-        <Col span={24}>
-          <Typography.Text>Generations: {generations}</Typography.Text>
+        <Col span={8}>
+          <Card>
+            <Statistic title="Generations:" value={generations} />
+          </Card>
         </Col>
       </Row>
       <Row gutter={[16, 16]}>

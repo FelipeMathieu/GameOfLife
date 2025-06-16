@@ -1,6 +1,5 @@
 import { Flex } from "antd";
 import Field from "./components/field";
-import Header from "./components/header";
 
 function App() {
   return (
@@ -12,7 +11,6 @@ function App() {
         padding: "0.5rem",
       }}
     >
-      <Header />
       <Field />
     </Flex>
   );

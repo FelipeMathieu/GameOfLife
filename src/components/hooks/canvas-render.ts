@@ -3,12 +3,9 @@ import { useRunning } from "../../core/store";
 import type { Layer as KonvaLayer } from "konva/lib/Layer";
 import { useRenderStep } from "./render-step";
 
-export function useGameLoop(
-  layerRef: React.RefObject<KonvaLayer | null>,
-  fps = 30
-) {
+export function useGameLoop(layerRef: React.RefObject<KonvaLayer | null>) {
   const manualRunRef = useRef(false);
-  const { running, updateRunning } = useRunning();
+  const { running, updateRunning, fps } = useRunning();
   const requestRef = useRef<number>(0);
   const lastTimeRef = useRef(performance.now());
   const frameDuration = 1000 / fps;

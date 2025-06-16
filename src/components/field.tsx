@@ -10,8 +10,7 @@ import { useGameLoop } from "./hooks/canvas-render";
 import { values } from "lodash";
 import type { Layer as KonvaLayer } from "konva/lib/Layer";
 import KnownForms from "./known-forms";
-
-const FPS = 30;
+import Header from "./header";
 
 const Field = () => {
   const { cells, batchUpdate, updateCreature } = useCreatures();
@@ -20,7 +19,7 @@ const Field = () => {
   const [loading, setLoading] = useState(true);
   const [states, setStates] = useState(1);
 
-  const animate = useGameLoop(layerRef, FPS);
+  const animate = useGameLoop(layerRef);
 
   const onCellClick = (cell: ICreature) => {
     if (!running) {
@@ -74,6 +73,8 @@ const Field = () => {
   return (
     <Card loading={loading}>
       <Flex vertical gap={20} align="center" justify="center">
+        <Header />
+
         <GameInfo
           states={states}
           setStates={setStates}
