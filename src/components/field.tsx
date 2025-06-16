@@ -4,7 +4,7 @@ import { CELL_SIZE, FIELD_SIZE } from "../common/constants";
 import { Layer, Rect, Stage } from "react-konva";
 import { useEffect, useRef, useState, type JSX } from "react";
 import { Creature } from "../common/models";
-import { useCreatures, useGameUIStore } from "../core/store";
+import { useCreatures, useGameUIStore, useRunning } from "../core/store";
 import type { ICreature } from "../common/interfaces";
 import { useGameLoop } from "./hooks/canvas-render";
 import type { Layer as KonvaLayer } from "konva/lib/Layer";
@@ -20,14 +20,15 @@ const Field = () => {
   const [loading, setLoading] = useState(true);
   const [states, setStates] = useState(1);
   const [rects, setRects] = useState<JSX.Element[]>([]);
+  const { running } = useRunning();
 
   useWatchCreatures(rectsRef);
 
   const animate = useGameLoop();
 
   const onCellClick = (cell: ICreature) => {
-    const running = useGameUIStore.getState().running;
-    if (!running) {
+    const isRunning = useGameUIStore.getState().running;
+    if (!isRunning) {
       if (cell.Alive) cell.Kill();
       else cell.Revive();
 
@@ -36,7 +37,6 @@ const Field = () => {
   };
 
   const onNextGeneration = (times?: number) => {
-    const running = useGameUIStore.getState().running;
     if (!running) {
       animate(performance.now(), times || states);
     }
