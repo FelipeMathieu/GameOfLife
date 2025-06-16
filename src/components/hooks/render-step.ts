@@ -6,9 +6,8 @@ import {
   useGenerations,
 } from "../../core/store";
 import { verifyCreatureState } from "../../core/helper/creatures-control";
-import type { Layer as KonvaLayer } from "konva/lib/Layer";
 
-export const useRenderStep = (layerRef: React.RefObject<KonvaLayer | null>) => {
+export const useRenderStep = () => {
   const { batchUpdate } = useCreatures();
   const { nextGeneration } = useGenerations();
 
@@ -27,7 +26,6 @@ export const useRenderStep = (layerRef: React.RefObject<KonvaLayer | null>) => {
 
     if (!isEmpty(updatedCells)) {
       batchUpdate(updatedCells);
-      layerRef.current?.batchDraw();
     }
 
     nextGeneration();

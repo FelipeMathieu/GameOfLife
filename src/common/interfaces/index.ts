@@ -2,6 +2,9 @@ export interface ICreature {
   X: number;
   Y: number;
   Alive: boolean;
-  Kill: () => void;
-  Revive: () => void;
+  Modified: boolean;
+  Kill: (modified?: boolean) => void;
+  Revive: (modified?: boolean) => void;
+  ResetModify: () => void;
+  Modify: () => void;
 }

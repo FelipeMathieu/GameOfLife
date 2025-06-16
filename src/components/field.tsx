@@ -2,24 +2,29 @@ import { Card, Flex } from "antd";
 import GameInfo from "./game-info";
 import { CELL_SIZE, FIELD_SIZE } from "../common/constants";
 import { Layer, Rect, Stage } from "react-konva";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState, type JSX } from "react";
 import { Creature } from "../common/models";
 import { useCreatures, useRunning } from "../core/store";
 import type { ICreature } from "../common/interfaces";
 import { useGameLoop } from "./hooks/canvas-render";
-import { values } from "lodash";
 import type { Layer as KonvaLayer } from "konva/lib/Layer";
 import KnownForms from "./known-forms";
 import Header from "./header";
+import type { Rect as KonvaRect } from "konva/lib/shapes/Rect";
+import { useWatchCreatures } from "./hooks/watch-creatures";
 
 const Field = () => {
-  const { cells, batchUpdate, updateCreature } = useCreatures();
   const layerRef = useRef<KonvaLayer | null>(null);
+  const rectsRef = useRef<Record<string, KonvaRect>>({});
+  const { batchUpdate, updateCreature } = useCreatures();
   const { running } = useRunning();
   const [loading, setLoading] = useState(true);
   const [states, setStates] = useState(1);
+  const [rects, setRects] = useState<JSX.Element[]>([]);
 
-  const animate = useGameLoop(layerRef);
+  useWatchCreatures(rectsRef);
+
+  const animate = useGameLoop();
 
   const onCellClick = (cell: ICreature) => {
     if (!running) {
@@ -29,22 +34,6 @@ const Field = () => {
       updateCreature(cell);
     }
   };
-
-  const rects = useMemo(() => {
-    return values(cells).map((cell) => (
-      <Rect
-        key={`${cell.X},${cell.Y}`}
-        x={cell.X * CELL_SIZE}
-        y={cell.Y * CELL_SIZE}
-        width={CELL_SIZE}
-        height={CELL_SIZE}
-        fill={cell.Alive ? "black" : "white"}
-        stroke="gray"
-        onClick={() => onCellClick(cell)}
-        onTap={() => onCellClick(cell)}
-      />
-    ));
-  }, [cells, running]);
 
   const onNextGeneration = (times?: number) => {
     if (!running) {
@@ -62,6 +51,28 @@ const Field = () => {
     }
 
     batchUpdate(creatures);
+
+    setRects(
+      creatures.map((cell) => (
+        <Rect
+          key={`${cell.X},${cell.Y}`}
+          x={cell.X * CELL_SIZE}
+          y={cell.Y * CELL_SIZE}
+          width={CELL_SIZE}
+          height={CELL_SIZE}
+          fill={cell.Alive ? "black" : "white"}
+          stroke="gray"
+          onClick={() => onCellClick(cell)}
+          onTap={() => onCellClick(cell)}
+          ref={(node) => {
+            if (node) {
+              rectsRef.current[`${cell.X},${cell.Y}`] = node;
+            }
+          }}
+        />
+      ))
+    );
+
     setLoading(false);
 
     layerRef.current?.batchDraw();

@@ -1,18 +1,17 @@
 import { useEffect, useRef } from "react";
 import { useGameUIStore, useRunning } from "../../core/store";
-import type { Layer as KonvaLayer } from "konva/lib/Layer";
 import { useRenderStep } from "./render-step";
 
 const FRAME = 1000;
 
-export function useGameLoop(layerRef: React.RefObject<KonvaLayer | null>) {
+export function useGameLoop() {
   const manualRunRef = useRef(false);
   const { fps } = useRunning();
   const { running, updateRunning } = useRunning();
   const requestRef = useRef<number>(0);
   const lastTimeRef = useRef(performance.now());
 
-  const step = useRenderStep(layerRef);
+  const step = useRenderStep();
 
   const animate = (time: number, times?: number, iteration: number = 1) => {
     const { fps: framesPerSecond, running: isRunning } =
