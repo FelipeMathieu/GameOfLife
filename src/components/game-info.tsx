@@ -137,7 +137,7 @@ const GameInfo: React.FC<IGameInfo> = ({
           <Flex align="flex-end" justify="center" gap={8}>
             <Flex vertical align="flex-start">
               <Typography.Text type="secondary">
-                Number of states to advance:
+                Number of generations to advance:
               </Typography.Text>
               <InputNumber
                 value={states}
