@@ -27,10 +27,11 @@ export function useGameLoop(layerRef: React.RefObject<KonvaLayer | null>) {
     if (delta >= frameDuration) {
       step();
       lastTimeRef.current = time;
+      iteration = iteration + 1;
     }
 
     requestRef.current = requestAnimationFrame((newTime) =>
-      animate(newTime, times, iteration + 1)
+      animate(newTime, times, iteration)
     );
   };
 
