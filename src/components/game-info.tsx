@@ -19,6 +19,7 @@ import {
 } from "@ant-design/icons";
 import { useGenerations, useRunning } from "../core/store/game-ui-store";
 import { useWatchMaxPopulation } from "./hooks/watch-max-population";
+import { FPS } from "../common/constants";
 
 interface IGameInfo {
   states: number;
@@ -69,7 +70,7 @@ const GameInfo: React.FC<IGameInfo> = ({
             <Slider
               min={1}
               defaultValue={fps}
-              max={120}
+              max={FPS}
               style={{ width: "100%" }}
               onChange={updateFps}
             />
