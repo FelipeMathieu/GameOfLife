@@ -23,6 +23,8 @@ const store = create<IState>((set) => ({
   reset: () => set(() => ({ generations: 0 })),
 }));
 
+export const useGameUIStore = store;
+
 export const useRunning = () => {
   const running = store(useShallow((state) => state.running));
   const fps = store(useShallow((state) => state.fps));

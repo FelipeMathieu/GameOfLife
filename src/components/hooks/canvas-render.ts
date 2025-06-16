@@ -1,25 +1,32 @@
 import { useEffect, useRef } from "react";
-import { useRunning } from "../../core/store";
+import { useGameUIStore, useRunning } from "../../core/store";
 import type { Layer as KonvaLayer } from "konva/lib/Layer";
 import { useRenderStep } from "./render-step";
 
+const FRAME = 1000;
+
 export function useGameLoop(layerRef: React.RefObject<KonvaLayer | null>) {
   const manualRunRef = useRef(false);
-  const { running, updateRunning, fps } = useRunning();
+  const { fps } = useRunning();
+  const { running, updateRunning } = useRunning();
   const requestRef = useRef<number>(0);
   const lastTimeRef = useRef(performance.now());
-  const frameDuration = 1000 / fps;
 
   const step = useRenderStep(layerRef);
 
   const animate = (time: number, times?: number, iteration: number = 1) => {
+    const { fps: framesPerSecond, running: isRunning } =
+      useGameUIStore.getState();
+    const frameDuration = FRAME / framesPerSecond;
+
     if (times && !manualRunRef.current) {
       manualRunRef.current = true;
     }
 
-    if (times && iteration > times) {
+    if (!isRunning || (times && iteration > times)) {
       manualRunRef.current = false;
       updateRunning(false);
+      cancelAnimationFrame(requestRef.current);
       return;
     }
 
@@ -41,7 +48,7 @@ export function useGameLoop(layerRef: React.RefObject<KonvaLayer | null>) {
     }
 
     return () => {
-      if (!running && requestRef.current)
+      if (!manualRunRef.current && requestRef.current)
         cancelAnimationFrame(requestRef.current);
     };
   }, [running, fps, manualRunRef.current]);
