@@ -15,7 +15,6 @@ interface IState {
 
 const store = create<IState>((set) => ({
   cells: {},
-  updatedCreature: null,
   maxPopulation: 0,
   updateMaxPopulation: (value: number) => set(() => ({ maxPopulation: value })),
   updateCreature: (creature: ICreature) => {
@@ -24,7 +23,6 @@ const store = create<IState>((set) => ({
         ...state.cells,
         [`${creature.X},${creature.Y}`]: creature,
       },
-      updatedCreature: creature,
     }));
   },
   batchUpdate: (creatures: ICreature[]) =>

@@ -13,6 +13,11 @@ export function useGameLoop() {
 
   const step = useRenderStep();
 
+  const frameCallback =
+    (times?: number, iteration: number = 1) =>
+    (newTime: number) =>
+      animate(newTime, times, iteration);
+
   const animate = (time: number, times?: number, iteration: number = 1) => {
     const { fps: framesPerSecond, running: isRunning } =
       useGameUIStore.getState();
@@ -36,9 +41,11 @@ export function useGameLoop() {
       iteration = iteration + 1;
     }
 
-    requestRef.current = requestAnimationFrame((newTime) =>
-      animate(newTime, times, iteration)
-    );
+    if (requestRef.current) {
+      cancelAnimationFrame(requestRef.current);
+    }
+
+    requestRef.current = requestAnimationFrame(frameCallback(times, iteration));
   };
 
   useEffect(() => {
