@@ -28,8 +28,8 @@ const Field = () => {
       if (cell.Alive) cell.Kill();
       else cell.Revive();
 
-      updateCreature(cell);
       fillCreature(cell, rectsRef);
+      updateCreature(cell);
     }
   };
 

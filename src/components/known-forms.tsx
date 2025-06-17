@@ -45,7 +45,7 @@ type TKnownForms =
 const color = (isSelected: boolean) => (isSelected ? SELECTED : "white");
 
 const KnownForms = () => {
-  const { layerRef, rectsRef, resetCells } = useContext(FieldContext);
+  const { rectsRef, resetCells } = useContext(FieldContext);
   const { running } = useRunning();
   const { reset } = useGenerations();
   const { population } = usePopulation();
@@ -56,7 +56,6 @@ const KnownForms = () => {
     creatures.forEach((cell) => fillCreature(cell, rectsRef));
 
     batchUpdate(creatures);
-    layerRef?.current?.batchDraw();
   };
 
   useEffect(() => {

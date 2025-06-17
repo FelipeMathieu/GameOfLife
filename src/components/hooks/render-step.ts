@@ -11,7 +11,7 @@ import { FieldContext } from "../context/context";
 import { fillCreature } from "../../core/helper";
 
 export const useRenderStep = () => {
-  const { layerRef, rectsRef } = useContext(FieldContext);
+  const { rectsRef } = useContext(FieldContext);
   const { batchUpdate } = useCreatures();
   const { nextGeneration } = useGenerations();
 
@@ -31,7 +31,6 @@ export const useRenderStep = () => {
 
     if (!isEmpty(updatedCells)) {
       batchUpdate(updatedCells);
-      layerRef?.current?.batchDraw();
     }
 
     nextGeneration();
