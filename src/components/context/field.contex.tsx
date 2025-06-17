@@ -1,4 +1,3 @@
-import type { Layer } from "konva/lib/Layer";
 import type { Rect } from "konva/lib/shapes/Rect";
 import { useRef, type PropsWithChildren } from "react";
 import { FieldContext } from "./context";
@@ -6,7 +5,6 @@ import { useCreatures } from "../../core/store";
 
 export const FieldProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const { livingCells, batchUpdate } = useCreatures();
-  const layerRef = useRef<Layer | null>(null);
   const rectsRef = useRef<Record<string, Rect>>({});
 
   const resetCells = () => {
@@ -20,12 +18,11 @@ export const FieldProvider: React.FC<PropsWithChildren> = ({ children }) => {
       cell.Kill();
     });
 
-    layerRef?.current?.batchDraw();
     batchUpdate(livingCells);
   };
 
   return (
-    <FieldContext.Provider value={{ layerRef, rectsRef, resetCells }}>
+    <FieldContext.Provider value={{ rectsRef, resetCells }}>
       {children}
     </FieldContext.Provider>
   );

@@ -13,7 +13,7 @@ import { fillCreature } from "../core/helper";
 import { FieldContext } from "./context/context";
 
 const Field = () => {
-  const { layerRef, rectsRef } = useContext(FieldContext);
+  const { rectsRef } = useContext(FieldContext);
   const { batchUpdate, updateCreature } = useCreatures();
   const [loading, setLoading] = useState(true);
   const [states, setStates] = useState(1);
@@ -72,8 +72,6 @@ const Field = () => {
     );
 
     setLoading(false);
-
-    layerRef.current?.batchDraw();
   }, [FIELD_SIZE]);
 
   return (
@@ -90,7 +88,7 @@ const Field = () => {
         <KnownForms />
 
         <Stage width={FIELD_SIZE * CELL_SIZE} height={FIELD_SIZE * CELL_SIZE}>
-          <Layer ref={layerRef}>{rects}</Layer>
+          <Layer>{rects}</Layer>
         </Stage>
       </Flex>
     </Card>
