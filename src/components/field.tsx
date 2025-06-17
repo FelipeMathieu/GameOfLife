@@ -2,27 +2,23 @@ import { Card, Flex } from "antd";
 import GameInfo from "./game-info";
 import { CELL_SIZE, FIELD_SIZE } from "../common/constants";
 import { Layer, Rect, Stage } from "react-konva";
-import { useEffect, useRef, useState, type JSX } from "react";
+import { useContext, useEffect, useState, type JSX } from "react";
 import { Creature } from "../common/models";
 import { useCreatures, useGameUIStore, useRunning } from "../core/store";
 import type { ICreature } from "../common/interfaces";
 import { useGameLoop } from "./hooks/canvas-render";
-import type { Layer as KonvaLayer } from "konva/lib/Layer";
 import KnownForms from "./known-forms";
 import Header from "./header";
-import type { Rect as KonvaRect } from "konva/lib/shapes/Rect";
-import { useWatchCreatures } from "./hooks/watch-creatures";
+import { fillCreature } from "../core/helper";
+import { FieldContext } from "./context/context";
 
 const Field = () => {
-  const layerRef = useRef<KonvaLayer | null>(null);
-  const rectsRef = useRef<Record<string, KonvaRect>>({});
+  const { layerRef, rectsRef } = useContext(FieldContext);
   const { batchUpdate, updateCreature } = useCreatures();
   const [loading, setLoading] = useState(true);
   const [states, setStates] = useState(1);
   const [rects, setRects] = useState<JSX.Element[]>([]);
   const { running } = useRunning();
-
-  useWatchCreatures(layerRef, rectsRef);
 
   const animate = useGameLoop();
 
@@ -33,6 +29,7 @@ const Field = () => {
       else cell.Revive();
 
       updateCreature(cell);
+      fillCreature(cell, rectsRef);
     }
   };
 

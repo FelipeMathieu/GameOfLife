@@ -1,5 +1,6 @@
 import { Flex } from "antd";
 import Field from "./components/field";
+import { FieldProvider } from "./components/context/field.contex";
 
 function App() {
   return (
@@ -11,7 +12,9 @@ function App() {
         padding: "0.5rem",
       }}
     >
-      <Field />
+      <FieldProvider>
+        <Field />
+      </FieldProvider>
     </Flex>
   );
 }

@@ -1,6 +1,6 @@
 import { Card, Flex } from "antd";
 import { FIELD_SIZE } from "../common/constants";
-import { memo, useEffect, useState } from "react";
+import { memo, useContext, useEffect, useState } from "react";
 import {
   useCreatures,
   useGenerations,
@@ -13,8 +13,11 @@ import {
   buildBoat,
   buildGlider,
   buildToad,
+  fillCreature,
 } from "../core/helper";
 import { buildLightweightSpaceship } from "../core/helper/build-lightweight-spaceship";
+import { FieldContext } from "./context/context";
+import type { ICreature } from "../common/interfaces";
 
 const images = {
   block: new URL("../assets/block.png", import.meta.url).href,
@@ -42,11 +45,19 @@ type TKnownForms =
 const color = (isSelected: boolean) => (isSelected ? SELECTED : "white");
 
 const KnownForms = () => {
+  const { layerRef, rectsRef, resetCells } = useContext(FieldContext);
   const { running } = useRunning();
   const { reset } = useGenerations();
   const { population } = usePopulation();
   const { killAll, cells, batchUpdate } = useCreatures();
   const [selectedForm, setSelectedForm] = useState<TKnownForms>();
+
+  const handleUpdate = (creatures: ICreature[]) => {
+    creatures.forEach((cell) => fillCreature(cell, rectsRef));
+
+    batchUpdate(creatures);
+    layerRef?.current?.batchDraw();
+  };
 
   useEffect(() => {
     if (population === 0 || running) {
@@ -55,29 +66,31 @@ const KnownForms = () => {
   }, [population, running]);
 
   const buildForm = (form: TKnownForms) => {
+    resetCells();
+
     switch (form) {
       case "boat": {
-        buildBoat(cells, CENTER, batchUpdate);
+        buildBoat(cells, CENTER, handleUpdate);
         break;
       }
       case "blinker": {
-        buildBlinker(cells, CENTER, batchUpdate);
+        buildBlinker(cells, CENTER, handleUpdate);
         break;
       }
       case "toad": {
-        buildToad(cells, CENTER, batchUpdate);
+        buildToad(cells, CENTER, handleUpdate);
         break;
       }
       case "glider": {
-        buildGlider(cells, CENTER, batchUpdate);
+        buildGlider(cells, CENTER, handleUpdate);
         break;
       }
       case "lightweight-spaceship": {
-        buildLightweightSpaceship(cells, CENTER, batchUpdate);
+        buildLightweightSpaceship(cells, CENTER, handleUpdate);
         break;
       }
       default: {
-        buildBlock(cells, CENTER, batchUpdate);
+        buildBlock(cells, CENTER, handleUpdate);
         break;
       }
     }

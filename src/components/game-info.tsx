@@ -20,6 +20,8 @@ import {
 import { useGenerations, useRunning } from "../core/store/game-ui-store";
 import { useWatchMaxPopulation } from "./hooks/watch-max-population";
 import { FPS } from "../common/constants";
+import { useContext } from "react";
+import { FieldContext } from "./context/context";
 
 interface IGameInfo {
   states: number;
@@ -32,6 +34,7 @@ const GameInfo: React.FC<IGameInfo> = ({
   setStates,
   onNextGeneration,
 }) => {
+  const { resetCells } = useContext(FieldContext);
   const { killAll } = useCreatures();
   const { population, maxPopulation } = usePopulation();
   const { running, updateRunning, fps, updateFps } = useRunning();
@@ -50,6 +53,7 @@ const GameInfo: React.FC<IGameInfo> = ({
   const onClear = () => {
     killAll();
     reset();
+    resetCells();
   };
 
   useWatchMaxPopulation();
