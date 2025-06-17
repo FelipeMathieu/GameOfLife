@@ -9,7 +9,7 @@ import {
   Statistic,
   Typography,
 } from "antd";
-import { useCreatures, usePopulation } from "../core/store";
+import { usePopulation } from "../core/store";
 import {
   ClearOutlined,
   ForwardOutlined,
@@ -35,7 +35,6 @@ const GameInfo: React.FC<IGameInfo> = ({
   onNextGeneration,
 }) => {
   const { resetCells } = useContext(FieldContext);
-  const { killAll } = useCreatures();
   const { population, maxPopulation } = usePopulation();
   const { running, updateRunning, fps, updateFps } = useRunning();
   const { generations, reset } = useGenerations();
@@ -51,7 +50,6 @@ const GameInfo: React.FC<IGameInfo> = ({
   };
 
   const onClear = () => {
-    killAll();
     reset();
     resetCells();
   };

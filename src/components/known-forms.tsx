@@ -49,7 +49,7 @@ const KnownForms = () => {
   const { running } = useRunning();
   const { reset } = useGenerations();
   const { population } = usePopulation();
-  const { killAll, cells, batchUpdate } = useCreatures();
+  const { cells, batchUpdate } = useCreatures();
   const [selectedForm, setSelectedForm] = useState<TKnownForms>();
 
   const handleUpdate = (creatures: ICreature[]) => {
@@ -65,8 +65,6 @@ const KnownForms = () => {
   }, [population, running]);
 
   const buildForm = (form: TKnownForms) => {
-    resetCells();
-
     switch (form) {
       case "boat": {
         buildBoat(cells, CENTER, handleUpdate);
@@ -97,10 +95,10 @@ const KnownForms = () => {
 
   const onClick = (form: TKnownForms) => {
     if (!running) {
-      killAll();
       reset();
-      buildForm(form);
+      resetCells();
       setSelectedForm(form);
+      buildForm(form);
     }
   };
 

@@ -11,7 +11,6 @@ interface IState {
   updateMaxPopulation: (value: number) => void;
   updateCreature: (creature: ICreature) => void;
   batchUpdate: (creatures: ICreature[]) => void;
-  killAll: () => void;
 }
 
 const store = create<IState>((set) => ({
@@ -35,23 +34,6 @@ const store = create<IState>((set) => ({
         ...keyBy(creatures, (item) => `${item.X},${item.Y}`),
       },
     })),
-  killAll: () =>
-    set((state) => {
-      const deadCreatures = values(state.cells)
-        .filter((cell) => cell.Alive)
-        .map((creature) => {
-          creature.Kill();
-          return creature;
-        });
-
-      return {
-        cells: {
-          ...state.cells,
-          ...keyBy(deadCreatures, (item) => `${item.X},${item.Y}`),
-        },
-        maxPopulation: 0,
-      };
-    }),
 }));
 
 export const useCreaturesStore = store;
@@ -66,13 +48,12 @@ export const useCreatures = () => {
     () => values(cells).filter((cell) => !cell.Alive),
     [cells]
   );
-  const { batchUpdate, updateCreature, killAll } = store.getState();
+  const { batchUpdate, updateCreature } = store.getState();
 
   return {
     cells,
     updateCreature,
     batchUpdate,
-    killAll,
     livingCells,
     deadCells,
   };
