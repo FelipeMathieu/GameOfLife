@@ -1,6 +1,7 @@
 import type { ICreature } from "../interfaces";
 
 export class Creature implements ICreature {
+  private readonly _id: string;
   private _x: number;
   private _y: number;
   private _alive = false;
@@ -9,6 +10,7 @@ export class Creature implements ICreature {
     this._x = x;
     this._y = y;
     this._alive = alive;
+    this._id = `${this._x}${this._y}`;
   }
 
   public Kill() {
@@ -17,6 +19,10 @@ export class Creature implements ICreature {
 
   public Revive() {
     this._alive = true;
+  }
+
+  public get Id() {
+    return this._id;
   }
 
   public get X() {
