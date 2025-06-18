@@ -8,6 +8,8 @@ import { useCreaturesStore, useGameUIStore } from "../core/store";
 import type { ICreature } from "../common/interfaces";
 import { useGameLoop } from "./hooks/canvas-render";
 import KnownForms from "./known-forms";
+import Header from "./header";
+import FieldRects from "./field-rects";
 
 const Field = () => {
   const [loading, setLoading] = useState(true);

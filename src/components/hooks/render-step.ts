@@ -6,19 +6,16 @@ import {
   useGenerations,
 } from "../../core/store";
 import { verifyCreatureState } from "../../core/helper/creatures-control";
-import type { TQuadrant } from "../../common/types";
-import { useCallback } from "react";
 
 /**
- * Returns a function that goes over the Creatures and updates them for rendering
+ * Returns a function that goes over the cells
  */
-export const useRenderStep = (quadrant: TQuadrant) => {
-  const [width, height] = quadrant;
-  const { batchUpdate } = useCreatures(quadrant);
+export const useRenderStep = () => {
+  const { batchUpdate } = useCreatures();
   const { nextGeneration } = useGenerations();
 
-  return useCallback(() => {
-    const creatures = useCreaturesStore.getState().cells[`${width}${height}`];
+  return () => {
+    const creatures = useCreaturesStore.getState().cells;
     const updatedCells: ICreature[] = [];
 
     values(creatures).forEach((cell) => {
@@ -35,5 +32,5 @@ export const useRenderStep = (quadrant: TQuadrant) => {
     }
 
     nextGeneration();
-  }, [quadrant]);
+  };
 };

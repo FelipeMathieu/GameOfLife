@@ -9,7 +9,7 @@ import {
   Statistic,
   Typography,
 } from "antd";
-import { usePopulation } from "../core/store";
+import { useCreatures, usePopulation } from "../core/store";
 import {
   ClearOutlined,
   ForwardOutlined,
@@ -32,7 +32,8 @@ const GameInfo: React.FC<IGameInfo> = ({
   setStates,
   onNextGeneration,
 }) => {
-  const { population, maxPopulation, killAll } = usePopulation();
+  const { killAll } = useCreatures();
+  const { population, maxPopulation } = usePopulation();
   const { running, updateRunning, fps, updateFps } = useRunning();
   const { generations, reset } = useGenerations();
 

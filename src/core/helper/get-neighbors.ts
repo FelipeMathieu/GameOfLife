@@ -10,9 +10,7 @@ const upstairsNeighbor = (cells: TCreatures, cell: ICreature) => {
   const x = cell.X;
   const y = newY < topOrLeftEdge ? bottomOrRightEdge : newY;
 
-  const [width, height] = cell.Quadrant;
-
-  return cells[`${x},${y},[${width},${height}]`];
+  return cells[`${x},${y}`];
 };
 
 const downstairsNeighbor = (cells: TCreatures, cell: ICreature) => {
@@ -20,9 +18,7 @@ const downstairsNeighbor = (cells: TCreatures, cell: ICreature) => {
   const x = cell.X;
   const y = newY > bottomOrRightEdge ? topOrLeftEdge : newY;
 
-  const [width, height] = cell.Quadrant;
-
-  return cells[`${x},${y},[${width},${height}]`];
+  return cells[`${x},${y}`];
 };
 
 const neighborOnTheRight = (cells: TCreatures, cell: ICreature) => {
@@ -30,9 +26,7 @@ const neighborOnTheRight = (cells: TCreatures, cell: ICreature) => {
   const x = newX > bottomOrRightEdge ? topOrLeftEdge : newX;
   const y = cell.Y;
 
-  const [width, height] = cell.Quadrant;
-
-  return cells[`${x},${y},[${width},${height}]`];
+  return cells[`${x},${y}`];
 };
 
 const neighborOnTheLeft = (cells: TCreatures, cell: ICreature) => {
@@ -40,9 +34,7 @@ const neighborOnTheLeft = (cells: TCreatures, cell: ICreature) => {
   const x = newX < topOrLeftEdge ? bottomOrRightEdge : newX;
   const y = cell.Y;
 
-  const [width, height] = cell.Quadrant;
-
-  return cells[`${x},${y},[${width},${height}]`];
+  return cells[`${x},${y}`];
 };
 
 const getUpstairsNeighbors = (cells: TCreatures, cell: ICreature) => {
@@ -69,7 +61,7 @@ const getDownstairsNeighbors = (cells: TCreatures, cell: ICreature) => {
 };
 
 /**
- * A function that returns the giving creature its neighbors
+ * A function that returns the giving creature
  */
 
 export const getNeighbors = (cells: TCreatures, cell: ICreature) => {
