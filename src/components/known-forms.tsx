@@ -13,10 +13,8 @@ import {
   buildBoat,
   buildGlider,
   buildToad,
-  fillCreature,
 } from "../core/helper";
 import { buildLightweightSpaceship } from "../core/helper/build-lightweight-spaceship";
-import { useFieldContext } from "./context/field-context";
 import type { ICreature } from "../common/interfaces";
 
 const images = {
@@ -45,16 +43,13 @@ type TKnownForms =
 const color = (isSelected: boolean) => (isSelected ? SELECTED : "white");
 
 const KnownForms = () => {
-  const { rectsRef, resetCells } = useFieldContext();
   const { running } = useRunning();
   const { reset } = useGenerations();
   const { population } = usePopulation();
-  const { cells, batchUpdate } = useCreatures();
+  const { cells, batchUpdate, killAll } = useCreatures();
   const [selectedForm, setSelectedForm] = useState<TKnownForms>();
 
   const handleUpdate = (creatures: ICreature[]) => {
-    creatures.forEach((cell) => fillCreature(cell, rectsRef));
-
     batchUpdate(creatures);
   };
 
@@ -96,7 +91,7 @@ const KnownForms = () => {
   const onClick = (form: TKnownForms) => {
     if (!running) {
       reset();
-      resetCells();
+      killAll();
       setSelectedForm(form);
       buildForm(form);
     }

@@ -6,11 +6,8 @@ import {
   useGenerations,
 } from "../../core/store";
 import { verifyCreatureState } from "../../core/helper/creatures-control";
-import { useFieldContext } from "../context/field-context";
-import { fillCreature } from "../../core/helper";
 
 export const useRenderStep = () => {
-  const { rectsRef } = useFieldContext();
   const { batchUpdate } = useCreatures();
   const { nextGeneration } = useGenerations();
 
@@ -23,7 +20,6 @@ export const useRenderStep = () => {
       verifyCreatureState(clonedCell, creatures);
 
       if (clonedCell.Alive !== cell.Alive) {
-        fillCreature(clonedCell, rectsRef);
         updatedCells.push(clonedCell);
       }
     });

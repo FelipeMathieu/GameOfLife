@@ -9,7 +9,7 @@ import {
   Statistic,
   Typography,
 } from "antd";
-import { usePopulation } from "../core/store";
+import { useCreatures, usePopulation } from "../core/store";
 import {
   ClearOutlined,
   ForwardOutlined,
@@ -20,7 +20,6 @@ import {
 import { useGenerations, useRunning } from "../core/store/game-ui-store";
 import { useWatchMaxPopulation } from "./hooks/watch-max-population";
 import { FPS } from "../common/constants";
-import { useFieldContext } from "./context/field-context";
 
 interface IGameInfo {
   states: number;
@@ -33,7 +32,7 @@ const GameInfo: React.FC<IGameInfo> = ({
   setStates,
   onNextGeneration,
 }) => {
-  const { resetCells } = useFieldContext();
+  const { killAll } = useCreatures();
   const { population, maxPopulation } = usePopulation();
   const { running, updateRunning, fps, updateFps } = useRunning();
   const { generations, reset } = useGenerations();
@@ -50,7 +49,7 @@ const GameInfo: React.FC<IGameInfo> = ({
 
   const onClear = () => {
     reset();
-    resetCells();
+    killAll();
   };
 
   useWatchMaxPopulation();
