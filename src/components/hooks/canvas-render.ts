@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useGameUIStore, useRunning } from "../../core/store";
 import { useRenderStep } from "./render-step";
+import type { TQuadrant } from "../../common/types";
 
 const FRAME = 1000;
 
@@ -9,14 +10,14 @@ const FRAME = 1000;
  *
  * Also returns this function to be used manually when needed.
  */
-export const useGameLoop = () => {
+export const useGameLoop = (quadrant: TQuadrant) => {
   const manualRunRef = useRef(false);
   const { fps } = useRunning();
   const { running, updateRunning } = useRunning();
   const requestRef = useRef<number>(0);
   const lastTimeRef = useRef(performance.now());
 
-  const step = useRenderStep();
+  const step = useRenderStep(quadrant);
 
   const frameCallback =
     (times?: number, iteration: number = 1) =>
@@ -62,7 +63,7 @@ export const useGameLoop = () => {
       if (!manualRunRef.current && requestRef.current)
         cancelAnimationFrame(requestRef.current);
     };
-  }, [running, fps, manualRunRef.current]);
+  }, [running, fps, manualRunRef.current, quadrant]);
 
   return animate;
 };

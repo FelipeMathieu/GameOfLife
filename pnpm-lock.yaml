@@ -17,6 +17,9 @@ importers:
       antd:
         specifier: ^5.26.0
         version: 5.26.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      immer:
+        specifier: ^10.1.1
+        version: 10.1.1
       konva:
         specifier: ^9.3.20
         version: 9.3.20
@@ -2593,8 +2596,7 @@ snapshots:
 
   ignore@7.0.5: {}
 
-  immer@10.1.1:
-    optional: true
+  immer@10.1.1: {}
 
   import-fresh@3.3.1:
     dependencies:

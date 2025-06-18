@@ -1,42 +1,41 @@
 import type { ICreature } from "../common/interfaces";
 import { useCreatures, useGameUIStore } from "../core/store";
 import { Rect } from "react-konva";
-import { values } from "lodash";
 import { CELL_SIZE } from "../common/constants";
-import { useMemo } from "react";
+import type { TQuadrant } from "../common/types";
+import { memo } from "react";
 
-const FieldRects = () => {
-  const { cells, updateCreature } = useCreatures();
+interface IFieldRects {
+  creature: ICreature;
+  quadrant: TQuadrant;
+}
 
-  const onCellClick = (cell: ICreature) => {
+const FieldRect: React.FC<IFieldRects> = ({ creature, quadrant }) => {
+  const { updateCreature } = useCreatures(quadrant);
+
+  const onCellClick = () => {
     const isRunning = useGameUIStore.getState().running;
     if (!isRunning) {
-      if (cell.Alive) cell.Kill();
-      else cell.Revive();
+      if (creature.Alive) creature.Kill();
+      else creature.Revive();
 
-      updateCreature(cell);
+      updateCreature(creature);
     }
   };
 
-  const rects = useMemo(
-    () =>
-      values(cells).map((cell) => (
-        <Rect
-          key={`${cell.X},${cell.Y}-${cell.Alive}`}
-          x={cell.X * CELL_SIZE}
-          y={cell.Y * CELL_SIZE}
-          width={CELL_SIZE}
-          height={CELL_SIZE}
-          fill={cell.Alive ? "black" : "white"}
-          stroke="gray"
-          onClick={() => onCellClick(cell)}
-          onTap={() => onCellClick(cell)}
-        />
-      )),
-    [cells]
+  return (
+    <Rect
+      key={`${creature.Id}-${creature.Alive}`}
+      x={creature.X * CELL_SIZE}
+      y={creature.Y * CELL_SIZE}
+      width={CELL_SIZE}
+      height={CELL_SIZE}
+      fill={creature.Alive ? "black" : "white"}
+      stroke="gray"
+      onClick={() => onCellClick()}
+      onTap={() => onCellClick()}
+    />
   );
-
-  return rects;
 };
 
-export default FieldRects;
+export default memo(FieldRect);
