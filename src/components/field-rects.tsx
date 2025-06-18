@@ -17,4 +17,4 @@ const FieldRects = () => {
   );
 };
 
-export default memo(FieldRects);
+export default FieldRects;
