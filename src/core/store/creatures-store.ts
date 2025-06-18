@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { ICreature } from "../../common/interfaces";
 import { entries, keyBy, keys, values } from "lodash";
-import type { TQuadrant, TQuadrantCells } from "../../common/types";
+import type { TCreatures, TQuadrant, TQuadrantCells } from "../../common/types";
 import { useShallow } from "zustand/shallow";
 import { useMemo } from "react";
 import { produce } from "immer";
@@ -22,20 +22,33 @@ const store = create<IState>((set) => ({
   updateMaxPopulation: (value: number) => set(() => ({ maxPopulation: value })),
   updateCreature: (quadrant: TQuadrant, creature: ICreature) => {
     const [width, height] = quadrant;
+    const key = `${width}${height}` as `${number}${number}`;
 
     return set(
-      produce(
-        (state: IState) =>
-          (state.cells[`${width}${height}`][creature.Id] = creature)
-      )
+      produce((state: IState) => {
+        console.log(
+          "** state.cells[key][`${creature.Id}`]",
+          key,
+          state.cells[key][`${creature.Id}`]
+        );
+        return (state.cells[key][`${creature.Id}`] = creature);
+      })
     );
   },
   batchUpdate: (quadrant: TQuadrant, creatures: ICreature[]) => {
     const [width, height] = quadrant;
+    const key = `${width}${height}` as `${number}${number}`;
 
     return set(
       produce((state: IState) => {
-        state.cells[`${width}${height}`] = keyBy(creatures, (cell) => cell.Id);
+        const current = state.cells[key];
+        const updated = keyBy(creatures, (cell) => cell.Id);
+
+        if (JSON.stringify(current) !== JSON.stringify(updated)) {
+          state.cells[key] = updated;
+        }
+
+        return state;
       })
     );
   },
@@ -44,11 +57,13 @@ const store = create<IState>((set) => ({
       const newCells = entries(state.cells).reduce((acc, [key, creatures]) => {
         const cells = values(creatures);
 
-        cells.forEach((cell) => {
+        const updatedCreatures = cells.reduce((obj, cell) => {
           if (cell.Alive) cell.Kill();
+          obj[cell.Id] = cell;
+          return obj;
+        }, {} as TCreatures);
 
-          acc[key as `${number}${number}`] = { [`${cell.Id}`]: cell };
-        });
+        acc[key as `${number}${number}`] = updatedCreatures;
 
         return acc;
       }, {} as TQuadrantCells);
@@ -60,13 +75,16 @@ const store = create<IState>((set) => ({
 export const useCreaturesStore = store;
 
 export const useCreatures = (quadrant: TQuadrant) => {
-  const [width, height] = quadrant;
+  const key = `${quadrant[0]}${quadrant[1]}` as `${number}${number}`;
+
   const { batchUpdate: storeBatchUpdate, updateCreature: storeUpdateCreature } =
     store.getState();
 
-  const cells = store((state) => state.cells);
+  const quadrantCells = store(
+    useMemo(() => (state) => state.cells[key], [key])
+  );
 
-  const creatures = useMemo(() => values(cells[`${width}${height}`]), [cells]);
+  const creatures = useMemo(() => values(quadrantCells), [quadrantCells]);
 
   const batchUpdate = (creatures: ICreature[]) =>
     storeBatchUpdate(quadrant, creatures);

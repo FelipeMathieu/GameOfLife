@@ -1,19 +1,28 @@
-import { Card, Col, Flex, Row } from "antd";
+import { Card, Flex } from "antd";
 import GameInfo from "./game-info";
-import { SCENE_HEIGHT, SCENE_WIDTH } from "../common/constants";
-import { useState } from "react";
-import { useRunning } from "../core/store";
-// import { useGameLoop } from "./hooks/canvas-render";
+import {
+  CELL_SIZE,
+  FIELD_SIZE,
+  SCENE_HEIGHT,
+  SCENE_WIDTH,
+} from "../common/constants";
+import { memo, useRef, useState } from "react";
+import { useGameUIStore } from "../core/store";
 // import KnownForms from "./known-forms";
 import Header from "./header";
 import { useCreateCreatures } from "./hooks/create-creatures";
-import SceneStage from "./scene-stage";
+import { Group, Layer, Stage } from "react-konva";
+import type { TQuadrant } from "../common/types";
+import FieldRects from "./field-rects";
+import type { Group as KonvaGroup } from "konva/lib/Group";
+import { getCellQuadrant } from "../core/helper";
 
 const Field = () => {
+  const groupRefs = useRef<Record<string, KonvaGroup>>({});
   const [states, setStates] = useState(1);
-  const { running } = useRunning();
 
   const onNextGeneration = (times?: number) => {
+    const running = useGameUIStore.getState().running;
     if (!running) {
       console.log("** times", times);
     }
@@ -35,21 +44,39 @@ const Field = () => {
         {/* <KnownForms /> */}
 
         <Flex gap={0} vertical>
-          {Array.from({ length: SCENE_HEIGHT }).map((_, yIndex) => (
-            <Row key={yIndex} gutter={0}>
+          <Stage
+            width={SCENE_WIDTH * FIELD_SIZE * CELL_SIZE}
+            height={SCENE_HEIGHT * FIELD_SIZE * CELL_SIZE}
+          >
+            <Layer>
               <>
-                {Array.from({ length: SCENE_WIDTH }).map((_, xIndex) => (
-                  <Col key={`${xIndex}-${yIndex}`}>
-                    <SceneStage quadrant={[xIndex, yIndex]} />
-                  </Col>
-                ))}
+                {Array.from({ length: SCENE_HEIGHT }).flatMap((_, yIndex) =>
+                  Array.from({ length: SCENE_WIDTH }).map((_, xIndex) => {
+                    const quadrant: TQuadrant = getCellQuadrant(xIndex, yIndex);
+                    const [x, y] = quadrant;
+                    return (
+                      <Group
+                        key={`${x}-${y}`}
+                        x={x}
+                        y={y}
+                        ref={(node) => {
+                          if (node) {
+                            groupRefs.current[`${x}${y}`] = node;
+                          }
+                        }}
+                      >
+                        <FieldRects quadrant={quadrant} groupRefs={groupRefs} />
+                      </Group>
+                    );
+                  })
+                )}
               </>
-            </Row>
-          ))}
+            </Layer>
+          </Stage>
         </Flex>
       </Flex>
     </Card>
   );
 };
 
-export default Field;
+export default memo(Field);
