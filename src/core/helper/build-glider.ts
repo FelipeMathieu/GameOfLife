@@ -1,6 +1,10 @@
 import type { ICreature } from "../../common/interfaces";
 import type { TCreatures } from "../../common/types";
 
+/**
+ * A function to build the Glider shape
+ */
+
 export const buildGlider = (
   cells: TCreatures,
   center: number,

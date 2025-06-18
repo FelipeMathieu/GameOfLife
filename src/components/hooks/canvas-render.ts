@@ -4,7 +4,12 @@ import { useRenderStep } from "./render-step";
 
 const FRAME = 1000;
 
-export function useGameLoop() {
+/**
+ * Returns an animate function that animates all the Creatures updates in Canvas.
+ *
+ * Also returns this function to be used manually when needed.
+ */
+export const useGameLoop = () => {
   const manualRunRef = useRef(false);
   const { fps } = useRunning();
   const { running, updateRunning } = useRunning();
@@ -60,4 +65,4 @@ export function useGameLoop() {
   }, [running, fps, manualRunRef.current]);
 
   return animate;
-}
+};

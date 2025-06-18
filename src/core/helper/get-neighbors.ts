@@ -60,6 +60,10 @@ const getDownstairsNeighbors = (cells: TCreatures, cell: ICreature) => {
   return [bottom, southeast, southwest];
 };
 
+/**
+ * A function that returns the giving creature its neighbors
+ */
+
 export const getNeighbors = (cells: TCreatures, cell: ICreature) => {
   return [
     ...getUpstairsNeighbors(cells, cell),

@@ -7,6 +7,9 @@ import {
 } from "../../core/store";
 import { verifyCreatureState } from "../../core/helper/creatures-control";
 
+/**
+ * Returns a function that goes over the Creatures and updates them for rendering
+ */
 export const useRenderStep = () => {
   const { batchUpdate } = useCreatures();
   const { nextGeneration } = useGenerations();
