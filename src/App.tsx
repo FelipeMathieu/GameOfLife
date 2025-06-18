@@ -1,6 +1,6 @@
 import { Flex } from "antd";
 import Field from "./components/field";
-import { FieldProvider } from "./components/context/field.contex";
+import { FieldProvider } from "./components/context/field-provider";
 
 function App() {
   return (

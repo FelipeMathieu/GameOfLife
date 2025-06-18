@@ -1,6 +1,6 @@
 import { Card, Flex } from "antd";
 import { FIELD_SIZE } from "../common/constants";
-import { memo, useContext, useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import {
   useCreatures,
   useGenerations,
@@ -16,7 +16,7 @@ import {
   fillCreature,
 } from "../core/helper";
 import { buildLightweightSpaceship } from "../core/helper/build-lightweight-spaceship";
-import { FieldContext } from "./context/context";
+import { useFieldContext } from "./context/field-context";
 import type { ICreature } from "../common/interfaces";
 
 const images = {
@@ -45,7 +45,7 @@ type TKnownForms =
 const color = (isSelected: boolean) => (isSelected ? SELECTED : "white");
 
 const KnownForms = () => {
-  const { rectsRef, resetCells } = useContext(FieldContext);
+  const { rectsRef, resetCells } = useFieldContext();
   const { running } = useRunning();
   const { reset } = useGenerations();
   const { population } = usePopulation();

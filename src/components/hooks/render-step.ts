@@ -6,12 +6,11 @@ import {
   useGenerations,
 } from "../../core/store";
 import { verifyCreatureState } from "../../core/helper/creatures-control";
-import { useContext } from "react";
-import { FieldContext } from "../context/context";
+import { useFieldContext } from "../context/field-context";
 import { fillCreature } from "../../core/helper";
 
 export const useRenderStep = () => {
-  const { rectsRef } = useContext(FieldContext);
+  const { rectsRef } = useFieldContext();
   const { batchUpdate } = useCreatures();
   const { nextGeneration } = useGenerations();
 

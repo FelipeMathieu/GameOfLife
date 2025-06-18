@@ -1,6 +1,6 @@
 import type { Rect } from "konva/lib/shapes/Rect";
 import { useRef, type PropsWithChildren } from "react";
-import { FieldContext } from "./context";
+import { FieldContext } from "./field-context";
 import { useCreatures } from "../../core/store";
 
 export const FieldProvider: React.FC<PropsWithChildren> = ({ children }) => {
