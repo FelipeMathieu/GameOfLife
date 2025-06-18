@@ -38,14 +38,12 @@ export const useCreaturesStore = store;
 
 export const useCreatures = () => {
   const cells = store((state) => state.cells);
+
   const livingCells = useMemo(
     () => values(cells).filter((cell) => cell.Alive),
     [cells]
   );
-  const deadCells = useMemo(
-    () => values(cells).filter((cell) => !cell.Alive),
-    [cells]
-  );
+
   const { batchUpdate, updateCreature } = store.getState();
 
   const killAll = () => {
@@ -59,7 +57,6 @@ export const useCreatures = () => {
     updateCreature,
     batchUpdate,
     livingCells,
-    deadCells,
     killAll,
   };
 };
