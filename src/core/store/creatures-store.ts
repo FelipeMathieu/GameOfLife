@@ -44,12 +44,13 @@ export const useCreatures = () => {
     [cells]
   );
 
-  const { batchUpdate, updateCreature } = store.getState();
+  const { batchUpdate, updateCreature, updateMaxPopulation } = store.getState();
 
   const killAll = () => {
     livingCells.forEach((cell) => cell.Kill());
 
     batchUpdate(livingCells);
+    updateMaxPopulation(0);
   };
 
   return {
