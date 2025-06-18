@@ -1,128 +1,71 @@
 import { create } from "zustand";
 import type { ICreature } from "../../common/interfaces";
-import { entries, keyBy, keys, values } from "lodash";
-import type { TCreatures, TQuadrant, TQuadrantCells } from "../../common/types";
+import { keyBy, values } from "lodash";
+import type { TCreatures } from "../../common/types";
 import { useShallow } from "zustand/shallow";
 import { useMemo } from "react";
-import { produce } from "immer";
 
 interface IState {
-  cells: TQuadrantCells;
+  cells: TCreatures;
   maxPopulation: number;
   updateMaxPopulation: (value: number) => void;
-  updateCreature: (quadrant: TQuadrant, creature: ICreature) => void;
-  batchUpdate: (quadrant: TQuadrant, creatures: ICreature[]) => void;
-  killAll: () => void;
+  updateCreature: (creature: ICreature) => void;
+  batchUpdate: (creatures: ICreature[]) => void;
 }
 
 const store = create<IState>((set) => ({
   cells: {},
-  quadrantCells: {},
   maxPopulation: 0,
   updateMaxPopulation: (value: number) => set(() => ({ maxPopulation: value })),
-  updateCreature: (quadrant: TQuadrant, creature: ICreature) => {
-    const [width, height] = quadrant;
-    const key = `${width}${height}` as `${number}${number}`;
-
-    return set(
-      produce((state: IState) => {
-        console.log(
-          "** state.cells[key][`${creature.Id}`]",
-          key,
-          state.cells[key][`${creature.Id}`]
-        );
-        return (state.cells[key][`${creature.Id}`] = creature);
-      })
-    );
+  updateCreature: (creature: ICreature) => {
+    return set((state) => ({
+      cells: {
+        ...state.cells,
+        [`${creature.X},${creature.Y}`]: creature,
+      },
+    }));
   },
-  batchUpdate: (quadrant: TQuadrant, creatures: ICreature[]) => {
-    const [width, height] = quadrant;
-    const key = `${width}${height}` as `${number}${number}`;
-
-    return set(
-      produce((state: IState) => {
-        const current = state.cells[key];
-        const updated = keyBy(creatures, (cell) => cell.Id);
-
-        if (JSON.stringify(current) !== JSON.stringify(updated)) {
-          state.cells[key] = updated;
-        }
-
-        return state;
-      })
-    );
-  },
-  killAll: () =>
-    set((state) => {
-      const newCells = entries(state.cells).reduce((acc, [key, creatures]) => {
-        const cells = values(creatures);
-
-        const updatedCreatures = cells.reduce((obj, cell) => {
-          if (cell.Alive) cell.Kill();
-          obj[cell.Id] = cell;
-          return obj;
-        }, {} as TCreatures);
-
-        acc[key as `${number}${number}`] = updatedCreatures;
-
-        return acc;
-      }, {} as TQuadrantCells);
-
-      return { cells: newCells };
-    }),
+  batchUpdate: (creatures: ICreature[]) =>
+    set((state) => ({
+      cells: {
+        ...state.cells,
+        ...keyBy(creatures, (item) => `${item.X},${item.Y}`),
+      },
+    })),
 }));
 
 export const useCreaturesStore = store;
 
-export const useCreatures = (quadrant: TQuadrant) => {
-  const key = `${quadrant[0]}${quadrant[1]}` as `${number}${number}`;
+export const useCreatures = () => {
+  const cells = store((state) => state.cells);
 
-  const { batchUpdate: storeBatchUpdate, updateCreature: storeUpdateCreature } =
-    store.getState();
-
-  const quadrantCells = store(
-    useMemo(() => (state) => state.cells[key], [key])
+  const livingCells = useMemo(
+    () => values(cells).filter((cell) => cell.Alive),
+    [cells]
   );
 
-  const creatures = useMemo(() => values(quadrantCells), [quadrantCells]);
+  const { batchUpdate, updateCreature } = store.getState();
 
-  const batchUpdate = (creatures: ICreature[]) =>
-    storeBatchUpdate(quadrant, creatures);
+  const killAll = () => {
+    livingCells.forEach((cell) => cell.Kill());
 
-  const updateCreature = (creature: ICreature) =>
-    storeUpdateCreature(quadrant, creature);
+    batchUpdate(livingCells);
+  };
 
   return {
-    creatures,
+    cells,
     updateCreature,
     batchUpdate,
+    livingCells,
+    killAll,
   };
 };
 
 export const usePopulation = () => {
-  const cells = store((state) => state.cells);
-
-  const livingCells = useMemo(
-    () =>
-      keys(cells)
-        .map((key) =>
-          values(cells[key as `${number}${number}`]).filter(
-            (cell) => cell.Alive
-          )
-        )
-        .flat(),
-    [cells]
-  );
+  const { livingCells } = useCreatures();
   const population = livingCells.length;
   const maxPopulation = store(useShallow((state) => state.maxPopulation));
   const updateMaxPopulation = store.getState().updateMaxPopulation;
-  const killAll = store.getState().killAll;
 
-  return {
-    population,
-    maxPopulation,
-    livingCells,
-    updateMaxPopulation,
-    killAll,
-  };
+  return { population, maxPopulation, updateMaxPopulation };
 };

@@ -1,34 +1,41 @@
 import { Card, Flex } from "antd";
 import GameInfo from "./game-info";
-import {
-  CELL_SIZE,
-  FIELD_SIZE,
-  SCENE_HEIGHT,
-  SCENE_WIDTH,
-} from "../common/constants";
-import { memo, useRef, useState } from "react";
-import { useGameUIStore } from "../core/store";
-// import KnownForms from "./known-forms";
-import Header from "./header";
-import { useCreateCreatures } from "./hooks/create-creatures";
+import { CELL_SIZE, FIELD_SIZE } from "../common/constants";
 import { Group, Layer, Stage } from "react-konva";
-import type { TQuadrant } from "../common/types";
-import FieldRects from "./field-rects";
-import type { Group as KonvaGroup } from "konva/lib/Group";
-import { getCellQuadrant } from "../core/helper";
+import { useEffect, useState } from "react";
+import { Creature } from "../common/models";
+import { useCreaturesStore, useGameUIStore } from "../core/store";
+import type { ICreature } from "../common/interfaces";
+import { useGameLoop } from "./hooks/canvas-render";
+import KnownForms from "./known-forms";
 
 const Field = () => {
-  const groupRefs = useRef<Record<string, KonvaGroup>>({});
+  const [loading, setLoading] = useState(true);
   const [states, setStates] = useState(1);
+
+  const animate = useGameLoop();
 
   const onNextGeneration = (times?: number) => {
     const running = useGameUIStore.getState().running;
     if (!running) {
-      console.log("** times", times);
+      animate(performance.now(), times || states);
     }
   };
 
-  const loading = useCreateCreatures();
+  useEffect(() => {
+    const batchUpdate = useCreaturesStore.getState().batchUpdate;
+    const creatures: ICreature[] = [];
+
+    for (let y = 0; y < FIELD_SIZE; y++) {
+      for (let x = 0; x < FIELD_SIZE; x++) {
+        creatures.push(new Creature(x, y, false));
+      }
+    }
+
+    batchUpdate(creatures);
+
+    setLoading(false);
+  }, [FIELD_SIZE]);
 
   return (
     <Card loading={loading}>
@@ -41,42 +48,18 @@ const Field = () => {
           onNextGeneration={onNextGeneration}
         />
 
-        {/* <KnownForms /> */}
+        <KnownForms />
 
-        <Flex gap={0} vertical>
-          <Stage
-            width={SCENE_WIDTH * FIELD_SIZE * CELL_SIZE}
-            height={SCENE_HEIGHT * FIELD_SIZE * CELL_SIZE}
-          >
-            <Layer>
-              <>
-                {Array.from({ length: SCENE_HEIGHT }).flatMap((_, yIndex) =>
-                  Array.from({ length: SCENE_WIDTH }).map((_, xIndex) => {
-                    const quadrant: TQuadrant = getCellQuadrant(xIndex, yIndex);
-                    const [x, y] = quadrant;
-                    return (
-                      <Group
-                        key={`${x}-${y}`}
-                        x={x}
-                        y={y}
-                        ref={(node) => {
-                          if (node) {
-                            groupRefs.current[`${x}${y}`] = node;
-                          }
-                        }}
-                      >
-                        <FieldRects quadrant={quadrant} groupRefs={groupRefs} />
-                      </Group>
-                    );
-                  })
-                )}
-              </>
-            </Layer>
-          </Stage>
-        </Flex>
+        <Stage width={FIELD_SIZE * CELL_SIZE} height={FIELD_SIZE * CELL_SIZE}>
+          <Layer>
+            <Group>
+              <FieldRects />
+            </Group>
+          </Layer>
+        </Stage>
       </Flex>
     </Card>
   );
 };
 
-export default memo(Field);
+export default Field;
