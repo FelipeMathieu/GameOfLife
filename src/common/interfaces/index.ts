@@ -1,5 +1,7 @@
+import type { TId } from "../types";
+
 export interface ICreature {
-  Id: string;
+  Id: TId;
   X: number;
   Y: number;
   Alive: boolean;

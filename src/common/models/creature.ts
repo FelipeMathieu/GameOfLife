@@ -1,7 +1,8 @@
 import type { ICreature } from "../interfaces";
+import type { TId } from "../types";
 
 export class Creature implements ICreature {
-  private readonly _id: string;
+  private readonly _id: TId;
   private _x: number;
   private _y: number;
   private _alive = false;
@@ -10,7 +11,7 @@ export class Creature implements ICreature {
     this._x = x;
     this._y = y;
     this._alive = alive;
-    this._id = `${this._x}${this._y}`;
+    this._id = `${this._x},${this._y}`;
   }
 
   public Kill() {
