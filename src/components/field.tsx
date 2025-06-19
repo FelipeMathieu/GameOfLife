@@ -1,23 +1,17 @@
-import { Card, Flex } from "antd";
+import { Card, Flex, Spin } from "antd";
 import GameInfo from "./game-info";
-import { CELL_SIZE, FIELD_SIZE } from "../common/constants";
-import { Group, Layer, Stage } from "react-konva";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useRunning } from "../core/store";
 import { useGameLoop } from "./hooks/canvas-render";
 import KnownForms from "./known-forms";
 import Header from "./header";
-import FieldRects from "./field-rects";
 import { useCreateCreatures } from "./hooks/create-creatures";
+
+const BoardComponent = lazy(() => import("./board"));
 
 const Field = () => {
   const [states, setStates] = useState(1);
   const { running } = useRunning();
-  const [error, setError] = useState<Error>();
-
-  if (error) {
-    throw error;
-  }
 
   const animate = useGameLoop();
 
@@ -28,27 +22,6 @@ const Field = () => {
   };
 
   const loading = useCreateCreatures();
-
-  const renderCanvas = () => {
-    try {
-      return (
-        <Stage width={FIELD_SIZE * CELL_SIZE} height={FIELD_SIZE * CELL_SIZE}>
-          <Layer>
-            <Group>
-              <FieldRects />
-            </Group>
-          </Layer>
-        </Stage>
-      );
-    } catch (canvasError) {
-      setError(
-        canvasError instanceof Error
-          ? canvasError
-          : new Error(String(canvasError))
-      );
-      return null;
-    }
-  };
 
   return (
     <Card loading={loading}>
@@ -63,7 +36,9 @@ const Field = () => {
 
         <KnownForms />
 
-        {renderCanvas()}
+        <Suspense fallback={<Spin spinning size="large" />}>
+          <BoardComponent />
+        </Suspense>
       </Flex>
     </Card>
   );
