@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { MOCKED_CELLS } from "./cells.mock";
+import { killAllMockedCells, MOCKED_CELLS } from "./cells.mock";
 import { buildBlinker } from "../build-blinker";
 import type { ICreature } from "../../../common/interfaces";
 import { buildBlock } from "../build-block";
@@ -22,6 +22,7 @@ describe("Build shape helpers", () => {
 
   afterEach(() => {
     vi.resetAllMocks();
+    killAllMockedCells();
   });
 
   it("should return the blinker cells", () => {

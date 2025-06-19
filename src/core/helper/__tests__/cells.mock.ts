@@ -1,3 +1,4 @@
+import { values } from "lodash";
 import { Creature } from "../../../common/models";
 import type { TCreatures } from "../../../common/types";
 
@@ -39,3 +40,6 @@ export const MOCKED_CELLS: TCreatures = {
   [`5,4`]: new Creature(5, 4, false),
   [`5,5`]: new Creature(5, 5, false),
 };
+
+export const killAllMockedCells = () =>
+  values(MOCKED_CELLS).forEach((cell) => cell.Kill());
