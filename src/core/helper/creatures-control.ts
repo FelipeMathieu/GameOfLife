@@ -10,9 +10,6 @@ export const verifyCreatureState = (cell: ICreature, cells: TCreatures) => {
   const cellNeighbors = getNeighbors(cells, cell);
   const livingNeighbors = cellNeighbors.filter((cell) => cell.Alive).length;
 
-  console.log("** cell", cell);
-  console.log("** livingNeighbors", livingNeighbors);
-
   switch (cell.Alive) {
     case true: {
       if (livingNeighbors < 2 || livingNeighbors > 3) {

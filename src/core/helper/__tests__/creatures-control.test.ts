@@ -32,7 +32,6 @@ describe("Creatures control", () => {
   const Y = 2;
 
   afterEach(() => {
-    vi.clearAllMocks();
     killAllMockedCells();
   });
 

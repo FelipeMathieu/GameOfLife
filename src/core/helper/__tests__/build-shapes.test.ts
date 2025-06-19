@@ -21,7 +21,6 @@ describe("Build shape helpers", () => {
   };
 
   afterEach(() => {
-    vi.resetAllMocks();
     killAllMockedCells();
   });
 

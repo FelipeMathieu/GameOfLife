@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { renderHook } from "@testing-library/react";
 import { useRenderStep } from "../render-step";
 import type { TCreatures } from "../../../common/types";
@@ -37,10 +37,6 @@ vi.mock("../../../core/helper/creatures-control", () => ({
 }));
 
 describe("Render step hook", () => {
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
   it("should update modified creatures", () => {
     const animate = renderHook(() => useRenderStep()).result.current;
 
