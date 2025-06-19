@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import type { ICreature } from "../../common/interfaces";
-import { clone, keyBy, values } from "lodash";
+import { keyBy, values } from "lodash";
 import type { TCreatures } from "../../common/types";
 import { useShallow } from "zustand/shallow";
 import { useMemo } from "react";
@@ -24,7 +24,7 @@ const store = create(
       set((state) => ({
         cells: {
           ...state.cells,
-          [`${creature.Id}`]: clone(creature),
+          [`${creature.Id}`]: creature,
         },
       })),
     batchUpdate: (creatures: ICreature[]) =>
