@@ -25,7 +25,6 @@ describe("Build shape helpers", () => {
   });
 
   it("should return the blinker cells", () => {
-    console.log("CENTER", CENTER);
     buildBlinker(MOCKED_CELLS, CENTER, updateCallbackSpy);
 
     expect(updateCallbackSpy).toHaveBeenCalledTimes(1);
@@ -33,7 +32,6 @@ describe("Build shape helpers", () => {
   });
 
   it("should return the block cells", () => {
-    console.log("CENTER", CENTER);
     buildBlock(MOCKED_CELLS, CENTER, updateCallbackSpy);
 
     expect(updateCallbackSpy).toHaveBeenCalledTimes(1);
@@ -41,7 +39,6 @@ describe("Build shape helpers", () => {
   });
 
   it("should return the boat cells", () => {
-    console.log("CENTER", CENTER);
     buildBoat(MOCKED_CELLS, CENTER, updateCallbackSpy);
 
     expect(updateCallbackSpy).toHaveBeenCalledTimes(1);
@@ -49,7 +46,6 @@ describe("Build shape helpers", () => {
   });
 
   it("should return the glider cells", () => {
-    console.log("CENTER", CENTER);
     buildGlider(MOCKED_CELLS, CENTER, updateCallbackSpy);
 
     expect(updateCallbackSpy).toHaveBeenCalledTimes(1);
@@ -57,7 +53,6 @@ describe("Build shape helpers", () => {
   });
 
   it("should return the lightweight-spaceship cells", () => {
-    console.log("CENTER", CENTER);
     buildLightweightSpaceship(MOCKED_CELLS, CENTER, updateCallbackSpy);
 
     expect(updateCallbackSpy).toHaveBeenCalledTimes(1);
