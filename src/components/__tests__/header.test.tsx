@@ -15,4 +15,18 @@ describe("Header", () => {
 
     return expect.element(element).toBeInTheDocument();
   });
+
+  it("should render game title", () => {
+    const element = page.getByTestId("game-title");
+
+    return expect.element(element).toHaveTextContent("Game of Life");
+  });
+
+  it("should render game instructions", () => {
+    const element = page.getByTestId("game-instructions");
+
+    return expect
+      .element(element)
+      .toHaveTextContent("Pick up any known shape or select cells freely");
+  });
 });
