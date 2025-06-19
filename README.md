@@ -2,7 +2,7 @@
 
 Based on [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life), this project was made to study and complete a code challenge.
 
-It was deployed in Cloudfare instance and can be tested [here.](https://gameoflife-9jh.pages.dev/)
+It was deployed in Cloudflare instance and can be tested [here.](https://gameoflife-9jh.pages.dev/)
 
 ![alt text](image.png)
 
