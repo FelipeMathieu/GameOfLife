@@ -23,7 +23,7 @@ const CreatureRect: React.FC<ICreatureRect> = ({ creature }) => {
 
   return (
     <Rect
-      key={`${creature.X},${creature.Y}-${creature.Alive}`}
+      key={`${creature.Id}-${creature.Alive}`}
       x={creature.X * CELL_SIZE}
       y={creature.Y * CELL_SIZE}
       width={CELL_SIZE}

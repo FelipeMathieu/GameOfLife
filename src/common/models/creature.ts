@@ -10,7 +10,7 @@ export class Creature implements ICreature {
     this._x = x;
     this._y = y;
     this._alive = alive;
-    this._id = `${this._x}${this._y}`;
+    this._id = `${this._x},${this._y}`;
   }
 
   public Kill() {

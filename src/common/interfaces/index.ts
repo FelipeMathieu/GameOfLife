@@ -1,5 +1,5 @@
 export interface ICreature {
-  Id: string;
+  Id: `${number},${number}`;
   X: number;
   Y: number;
   Alive: boolean;
