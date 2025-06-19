@@ -1,7 +1,7 @@
 import { Rect } from "react-konva";
 import { CELL_SIZE } from "../common/constants";
 import type { ICreature } from "../common/interfaces";
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { useCreaturesStore, useGameUIStore } from "../core/store";
 
 interface ICreatureRect {
@@ -9,7 +9,7 @@ interface ICreatureRect {
 }
 
 const CreatureRect: React.FC<ICreatureRect> = ({ creature }) => {
-  const onCellClick = () => {
+  const onCellClick = useCallback(() => {
     const updateCreature = useCreaturesStore.getState().updateCreature;
     const isRunning = useGameUIStore.getState().running;
 
@@ -19,7 +19,7 @@ const CreatureRect: React.FC<ICreatureRect> = ({ creature }) => {
 
       updateCreature(creature);
     }
-  };
+  }, [creature]);
 
   return (
     <Rect
