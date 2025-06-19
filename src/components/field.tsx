@@ -25,8 +25,6 @@ const Field = () => {
     if (!running) {
       animate(performance.now(), times || states);
     }
-
-    setError(new Error("An Uncaught Error"));
   };
 
   const loading = useCreateCreatures();
