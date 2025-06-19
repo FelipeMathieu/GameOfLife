@@ -1,5 +1,7 @@
-import { Flex } from "antd";
+import { Alert, Flex } from "antd";
 import Field from "./components/field";
+
+const { ErrorBoundary } = Alert;
 
 function App() {
   return (
@@ -11,7 +13,9 @@ function App() {
         padding: "0.5rem",
       }}
     >
-      <Field />
+      <ErrorBoundary>
+        <Field />
+      </ErrorBoundary>
     </Flex>
   );
 }

@@ -13,6 +13,11 @@ import { useCreateCreatures } from "./hooks/create-creatures";
 const Field = () => {
   const [states, setStates] = useState(1);
   const { running } = useRunning();
+  const [error, setError] = useState<Error>();
+
+  if (error) {
+    throw error;
+  }
 
   const animate = useGameLoop();
 
@@ -20,9 +25,32 @@ const Field = () => {
     if (!running) {
       animate(performance.now(), times || states);
     }
+
+    setError(new Error("An Uncaught Error"));
   };
 
   const loading = useCreateCreatures();
+
+  const renderCanvas = () => {
+    try {
+      return (
+        <Stage width={FIELD_SIZE * CELL_SIZE} height={FIELD_SIZE * CELL_SIZE}>
+          <Layer>
+            <Group>
+              <FieldRects />
+            </Group>
+          </Layer>
+        </Stage>
+      );
+    } catch (canvasError) {
+      setError(
+        canvasError instanceof Error
+          ? canvasError
+          : new Error(String(canvasError))
+      );
+      return null;
+    }
+  };
 
   return (
     <Card loading={loading}>
@@ -37,13 +65,7 @@ const Field = () => {
 
         <KnownForms />
 
-        <Stage width={FIELD_SIZE * CELL_SIZE} height={FIELD_SIZE * CELL_SIZE}>
-          <Layer>
-            <Group>
-              <FieldRects />
-            </Group>
-          </Layer>
-        </Stage>
+        {renderCanvas()}
       </Flex>
     </Card>
   );
