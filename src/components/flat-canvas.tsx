@@ -1,11 +1,11 @@
-import { CELL_SIZE, FIELD_SIZE } from "../common/constants";
 import { useEffect, useRef, useState } from "react";
+import { useCreatures, useCreaturesStore, useGameUIStore } from "../core/store";
 import { values } from "lodash";
+import { CELL_SIZE, FIELD_SIZE } from "../common/constants";
 import type { TCreatures } from "../common/types";
 import { useFillCreature } from "./hooks/fill-creature";
-import { useCreatures, useCreaturesStore, useGameUIStore } from "../core/store";
 
-const Board = () => {
+const FlatCanvas = () => {
   const [error, setError] = useState<Error>();
   const { cellsSub } = useCreatures();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -79,4 +79,4 @@ const Board = () => {
   }
 };
 
-export default Board;
+export default FlatCanvas;

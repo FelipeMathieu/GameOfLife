@@ -8,10 +8,7 @@ const FieldRects = () => {
   return (
     <>
       {values(cells).map((cell) => (
-        <CreatureRect
-          key={`${cell.X},${cell.Y}-${cell.Alive}`}
-          creature={cell}
-        />
+        <CreatureRect key={`${cell.Id}-${cell.Alive}`} creature={cell} />
       ))}
     </>
   );
