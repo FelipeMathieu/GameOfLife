@@ -2,9 +2,13 @@ import type { ICreature } from "../../common/interfaces";
 import type { TCreatures } from "../../common/types";
 
 /**
- * A function to build the Boat shape
+ * Builds a "Boat" shape (a still life of five cells forming an asymmetric 2x3 pattern),
+ * centered around the provided coordinate.
+ *
+ * @param cells - A map of coordinates to ICreature instances.
+ * @param center - The X and Y coordinate used as the reference point for the boat structure.
+ * @param updateCallback - A callback invoked after reviving the involved cells.
  */
-
 export const buildBoat = (
   cells: TCreatures,
   center: number,

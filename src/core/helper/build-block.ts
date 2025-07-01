@@ -2,9 +2,13 @@ import type { ICreature } from "../../common/interfaces";
 import type { TCreatures } from "../../common/types";
 
 /**
- * A function to build the block shape
+ * Builds a "Block" shape (a 2x2 square of live cells) in the given cells grid,
+ * using the provided center coordinate as the bottom-right corner of the block.
+ *
+ * @param cells - A map of coordinates to ICreature instances.
+ * @param center - The X and Y coordinate that defines the bottom-right cell of the block.
+ * @param updateCallback - A callback to notify when the block cells have been revived.
  */
-
 export const buildBlock = (
   cells: TCreatures,
   center: number,

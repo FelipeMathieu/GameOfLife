@@ -2,9 +2,15 @@ import type { ICreature } from "../../common/interfaces";
 import type { TCreatures } from "../../common/types";
 
 /**
- * A function to build the Toad shape
+ * Builds a "Toad" shape — a 6-cell period-2 oscillator that flips between
+ * two horizontal rows of three adjacent live cells.
+ *
+ * The `center` coordinate is used as the middle of the bottom row.
+ *
+ * @param cells - A map of coordinates to ICreature instances.
+ * @param center - The X and Y coordinate used as the reference point.
+ * @param updateCallback - Callback triggered with the revived cells.
  */
-
 export const buildToad = (
   cells: TCreatures,
   center: number,

@@ -2,9 +2,13 @@ import type { ICreature } from "../../common/interfaces";
 import type { TCreatures } from "../../common/types";
 
 /**
- * A function to build the Blinker shape
+ * Builds a "Blinker" shape (three vertically-aligned live cells) in the given cells grid,
+ * centered around the provided coordinate.
+ *
+ * @param cells - A map of cell coordinates to ICreature instances.
+ * @param center - The X and Y coordinate to center the Blinker on (e.g., 5 means (5,5)).
+ * @param updateCallback - A function to notify after the creatures have been updated.
  */
-
 export const buildBlinker = (
   cells: TCreatures,
   center: number,

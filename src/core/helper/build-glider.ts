@@ -2,9 +2,13 @@ import type { ICreature } from "../../common/interfaces";
 import type { TCreatures } from "../../common/types";
 
 /**
- * A function to build the Glider shape
+ * Builds a "Glider" shape (a 5-cell pattern that moves diagonally over time),
+ * using the provided center coordinate as the core reference.
+ *
+ * @param cells - A map of coordinates to ICreature instances.
+ * @param center - The X and Y coordinate used as a reference for positioning the Glider.
+ * @param updateCallback - A callback called after reviving the Glider cells.
  */
-
 export const buildGlider = (
   cells: TCreatures,
   center: number,

@@ -2,9 +2,14 @@ import type { ICreature } from "../../common/interfaces";
 import type { TCreatures } from "../../common/types";
 
 /**
- * A function to build the Lightweight-Spaceship shape
+ * Builds a "Lightweight Spaceship" (LWSS) shape — a common 9-cell pattern that moves
+ * horizontally across the grid over time. The `center` coordinate is used as an anchor
+ * for positioning the structure.
+ *
+ * @param cells - A map of coordinates to ICreature instances.
+ * @param center - The base coordinate used as the anchor for the LWSS pattern.
+ * @param updateCallback - Callback triggered after reviving all cells in the LWSS.
  */
-
 export const buildLightweightSpaceship = (
   cells: TCreatures,
   center: number,
