@@ -6,6 +6,7 @@ const { ErrorBoundary } = Alert;
 function App() {
   return (
     <Flex
+      data-testid="app-component"
       vertical
       align="center"
       gap={20}
