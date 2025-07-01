@@ -10,14 +10,14 @@ vi.mock("../components/field", () => ({
 }));
 
 describe("App component", () => {
-  it("should render app component normally", async () => {
+  it("should render app component normally", () => {
     componentMock.mockReturnValue(<div>field</div>);
 
     render(<App />);
 
     const element = screen.getByTestId("app-component");
 
-    await expect.element(element).toBeInTheDocument();
+    return expect.element(element).toBeInTheDocument();
   });
 
   it("should render error boundary component", () => {
