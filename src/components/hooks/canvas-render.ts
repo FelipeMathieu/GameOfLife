@@ -2,12 +2,15 @@ import { useEffect, useRef } from "react";
 import { useGameUIStore, useRunning } from "../../core/store";
 import { useRenderStep } from "./render-step";
 
-const FRAME = 1000;
+const FRAME = 1000; // 1000ms = 1 second (used to calculate frame interval)
 
 /**
- * Returns an animate function that animates all the Creatures updates in Canvas.
+ * Returns an `animate` function that runs the main game loop,
+ * updating creatures on the Canvas at a defined FPS.
  *
- * Also returns this function to be used manually when needed.
+ * - Automatically starts the loop when `running` is true.
+ * - Supports manual triggering via optional `times` parameter.
+ * - Stops when the requested number of iterations is completed.
  */
 export const useGameLoop = () => {
   const manualRunRef = useRef(false);
@@ -23,6 +26,13 @@ export const useGameLoop = () => {
     (newTime: number) =>
       animate(newTime, times, iteration);
 
+  /**
+   * The main animation function.
+   *
+   * @param time - The timestamp provided by requestAnimationFrame.
+   * @param times - Optional number of steps to run (for manual execution).
+   * @param iteration - The current iteration count.
+   */
   const animate = (time: number, times?: number, iteration: number = 1) => {
     const { fps: framesPerSecond, running: isRunning } =
       useGameUIStore.getState();

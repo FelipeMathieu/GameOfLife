@@ -4,10 +4,20 @@ import { CELL_SIZE } from "../../common/constants";
 import { useCreaturesStore } from "../../core/store";
 import { values } from "lodash";
 
+/** Return the fillCreature function so it can be called manually if needed */
 export const useFillCreature = (
   canvasRef: RefObject<HTMLCanvasElement | null>,
   drawnStatesRef: RefObject<Map<string, boolean>>
 ) => {
+  /**
+   * Draws a single creature cell on the canvas.
+   * Fills the cell with black if alive, white if dead,
+   * and outlines the cell with a gray stroke.
+   *
+   * Also updates the drawnStatesRef to track the current drawn state.
+   *
+   * @param cell - The creature cell to draw
+   */
   const fillCreature = (cell: ICreature) => {
     const canvas = canvasRef.current;
     const context = canvas?.getContext("2d");

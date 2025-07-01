@@ -4,7 +4,8 @@ import { useCreaturesStore, useGameUIStore } from "../../core/store";
 import { verifyCreatureState } from "../../core/helper/creatures-control";
 
 /**
- * Returns a function that goes over the cells
+ * Returns a function that processes one simulation step (generation) of the game.
+ * It calculates the next state of each creature and applies updates in batch.
  */
 export const useRenderStep = () => {
   return () => {
