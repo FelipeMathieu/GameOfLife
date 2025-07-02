@@ -51,10 +51,8 @@ Custom React hooks used within components.
 
 #### Component files:
 
-- `board.tsx`: Handles the game board or grid.
-- `creature-rect.tsx`: Renders individual creature elements.
-- `field-rects.tsx`: Manages the rendering of the entire field.
-- `field.tsx`: Handles field layout or logic.
+- `board.tsx`: Handles the game board.
+- `field.tsx`: Handles field layout, wrapping the board, info and so on.
 - `game-info.tsx`: Displays game-related data such as generation or population.
 - `header.tsx`: Header component of the application.
 - `known-forms.tsx`: Displays or handles known creature patterns.
@@ -71,7 +69,7 @@ Utility functions and business logic.
 
 ##### 📁 **tests**
 
-Unit tests for helper functions.
+Unit tests for hooks, helpers and components.
 
 ##### Files:
 
