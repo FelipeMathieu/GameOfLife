@@ -56,7 +56,6 @@ Here are some available scripts from package.json:
 | `pnpm build`   | Create an optimized production build |
 | `pnpm preview` | Preview the production build locally |
 | `pnpm lint`    | Run ESLint on the codebase           |
-| `pnpm format`  | Format the code using Prettier       |
 | `pnpm test`    | Run unit tests (if configured)       |
 
 ---
