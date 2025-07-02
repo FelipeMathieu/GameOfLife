@@ -39,7 +39,6 @@ const GameInfo: React.FC<IGameInfo> = ({
               FPS {fps}:
             </Typography.Text>
             <Slider
-              data-testid="fps-sliderr"
               min={1}
               defaultValue={fps}
               max={FPS}
