@@ -1,5 +1,5 @@
 import { CELL_SIZE, FIELD_SIZE } from "../common/constants";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { values } from "lodash";
 import type { TCreatures } from "../common/types";
 import { useFillCreature } from "./hooks/fill-creature";
@@ -43,14 +43,17 @@ const Board = () => {
     }
   };
 
-  const canvasControl = (creatures: TCreatures) => {
-    values(creatures)
-      .filter((cell) => {
-        const prevAlive = drawnStatesRef.current.get(cell.Id);
-        return typeof prevAlive === "boolean" && prevAlive !== cell.Alive;
-      })
-      .forEach(fillCreature);
-  };
+  const canvasControl = useCallback(
+    (creatures: TCreatures) => {
+      values(creatures)
+        .filter((cell) => {
+          const prevAlive = drawnStatesRef.current.get(cell.Id);
+          return typeof prevAlive === "boolean" && prevAlive !== cell.Alive;
+        })
+        .forEach(fillCreature);
+    },
+    [drawnStatesRef?.current]
+  );
 
   useEffect(() => {
     const unSub = cellsSub(canvasControl);
