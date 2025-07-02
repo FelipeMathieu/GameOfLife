@@ -50,15 +50,14 @@ Open `http://localhost:5173/` in your browser.
 
 Here are some available scripts from package.json:
 
-| Script           | Description                          |
-| ---------------- | ------------------------------------ |
-| `pnpm dev`       | Start the development server         |
-| `pnpm build`     | Create an optimized production build |
-| `pnpm preview`   | Preview the production build locally |
-| `pnpm lint`      | Run ESLint on the codebase           |
-| `pnpm format`    | Format the code using Prettier       |
-| `pnpm test`      | Run unit tests (if configured)       |
-| `pnpm typecheck` | Run TypeScript type checking         |
+| Script         | Description                          |
+| -------------- | ------------------------------------ |
+| `pnpm dev`     | Start the development server         |
+| `pnpm build`   | Create an optimized production build |
+| `pnpm preview` | Preview the production build locally |
+| `pnpm lint`    | Run ESLint on the codebase           |
+| `pnpm format`  | Format the code using Prettier       |
+| `pnpm test`    | Run unit tests (if configured)       |
 
 ---
 
