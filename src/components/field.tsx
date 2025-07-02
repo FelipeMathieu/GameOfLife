@@ -1,5 +1,5 @@
 import { Card, Flex, Spin } from "antd";
-import GameInfo from "./game-info";
+import GameInfo from "./game-info/game-info";
 import { lazy, Suspense, useState } from "react";
 import { useRunning } from "../core/store";
 import { useGameLoop } from "./hooks/canvas-render";
