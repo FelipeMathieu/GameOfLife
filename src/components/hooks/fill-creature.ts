@@ -1,4 +1,4 @@
-import { useEffect, type RefObject } from "react";
+import { useCallback, useEffect, type RefObject } from "react";
 import type { ICreature } from "../../common/interfaces";
 import { CELL_SIZE } from "../../common/constants";
 import { useCreaturesStore } from "../../core/store";
@@ -18,30 +18,33 @@ export const useFillCreature = (
    *
    * @param cell - The creature cell to draw
    */
-  const fillCreature = (cell: ICreature) => {
-    const canvas = canvasRef.current;
-    const context = canvas?.getContext("2d");
+  const fillCreature = useCallback(
+    (cell: ICreature) => {
+      const canvas = canvasRef.current;
+      const context = canvas?.getContext("2d");
 
-    if (context) {
-      drawnStatesRef.current.set(cell.Id, cell.Alive);
+      if (context) {
+        drawnStatesRef.current.set(cell.Id, cell.Alive);
 
-      context.fillStyle = cell.Alive ? "black" : "white";
-      context.fillRect(
-        cell.X * CELL_SIZE,
-        cell.Y * CELL_SIZE,
-        CELL_SIZE,
-        CELL_SIZE
-      );
+        context.fillStyle = cell.Alive ? "black" : "white";
+        context.fillRect(
+          cell.X * CELL_SIZE,
+          cell.Y * CELL_SIZE,
+          CELL_SIZE,
+          CELL_SIZE
+        );
 
-      context.strokeStyle = "gray";
-      context.strokeRect(
-        cell.X * CELL_SIZE,
-        cell.Y * CELL_SIZE,
-        CELL_SIZE,
-        CELL_SIZE
-      );
-    }
-  };
+        context.strokeStyle = "gray";
+        context.strokeRect(
+          cell.X * CELL_SIZE,
+          cell.Y * CELL_SIZE,
+          CELL_SIZE,
+          CELL_SIZE
+        );
+      }
+    },
+    [CELL_SIZE, canvasRef?.current, drawnStatesRef?.current]
+  );
 
   useEffect(() => {
     const cells = useCreaturesStore.getState().cells;
@@ -50,7 +53,7 @@ export const useFillCreature = (
       drawnStatesRef.current.set(cell.Id, cell.Alive);
       fillCreature(cell);
     });
-  }, []);
+  }, [fillCreature]);
 
   return fillCreature;
 };
