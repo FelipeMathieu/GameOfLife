@@ -49,7 +49,7 @@ Test files related to components.
 
 Custom React hooks used within components.
 
-#### Component files:
+#### Component files
 
 - `board.tsx`: Handles the game board.
 - `field.tsx`: Handles field layout, wrapping the board, info and so on.
@@ -67,11 +67,11 @@ Core logic and utility functions that support the application's functionality.
 
 Utility functions and business logic.
 
-##### 📁 **tests**
+#### 📁 **tests**
 
 Unit tests for hooks, helpers and components.
 
-##### Files:
+##### Files
 
 - `build-blinker.ts`, `build-block.ts`, `build-boat.ts`, `build-glider.ts`, `build-lightweight-spaceship.ts`, `build-toad.ts`: Functions that build specific creature patterns.
 - `creatures-control.ts`: Manages creature state and rules.
@@ -85,6 +85,10 @@ Handles application state management.
 - `creatures-store.ts`: Manages the state of all creatures on the board.
 - `game-ui-store.ts`: Manages UI-related state such as selection and control status.
 - `index.ts`: Central export file for the stores.
+
+#### 📁 utils/tests
+
+A function to help tests to use fake timers asynchronously.
 
 ---
 
