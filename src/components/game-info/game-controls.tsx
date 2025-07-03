@@ -12,7 +12,7 @@ import {
   usePopulation,
   useRunning,
 } from "../../core/store";
-import { memo, useCallback } from "react";
+import { memo } from "react";
 
 interface IGameControls {
   states: number;
@@ -30,11 +30,9 @@ const GameControls: React.FC<IGameControls> = ({
   const { running, updateRunning } = useRunning();
   const { reset } = useGenerations();
 
-  const onPlay = useCallback(() => {
-    if (!running) {
-      updateRunning(true);
-    }
-  }, [running]);
+  const onPlay = () => {
+    updateRunning(true);
+  };
 
   const onPause = () => {
     updateRunning(false);
@@ -46,10 +44,11 @@ const GameControls: React.FC<IGameControls> = ({
   };
 
   return (
-    <Row gutter={[16, 16]}>
+    <Row gutter={[16, 16]} data-testid="game-controls-wrapper">
       <Col span={24}>
         <Flex align="center" justify="center" gap={10}>
           <Button
+            data-testid="clear-button"
             color="danger"
             onClick={onClear}
             variant="filled"
@@ -57,6 +56,7 @@ const GameControls: React.FC<IGameControls> = ({
             disabled={running}
           />
           <Button
+            data-testid="pause-button"
             color={!running ? "blue" : "default"}
             onClick={onPause}
             variant="filled"
@@ -68,9 +68,10 @@ const GameControls: React.FC<IGameControls> = ({
             color={running ? "blue" : "default"}
             variant="filled"
             icon={<PlayCircleOutlined />}
-            disabled={population < 1}
+            disabled={running || population < 1}
           />
           <Button
+            data-testid="one-step-forward-button"
             onClick={() => {
               onPlay();
               onNextGeneration(1);
@@ -88,6 +89,7 @@ const GameControls: React.FC<IGameControls> = ({
               Number of generations to advance:
             </Typography.Text>
             <InputNumber
+              data-testid="steps-input"
               value={states}
               onChange={(value) => {
                 if (value) setStates(value);
@@ -102,6 +104,7 @@ const GameControls: React.FC<IGameControls> = ({
             />
           </Flex>
           <Button
+            data-testid="step-forward-button"
             onClick={() => {
               onPlay();
               onNextGeneration();
