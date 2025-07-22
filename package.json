@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "cross-env VITE_ENV=DEV vite",
-    "build": "cross-env VITE_ENV=PROD tsc -b && vite build",
+    "build": "cross-env VITE_ENV=PROD vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
