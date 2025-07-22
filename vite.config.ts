@@ -38,5 +38,10 @@ export default defineConfig({
   },
   build: {
     target: "esnext",
+    rollupOptions: {
+      output: {
+        format: "esm",
+      },
+    },
   },
 });
