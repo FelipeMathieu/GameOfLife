@@ -4,17 +4,16 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "cross-env VITE_ENV=DEV vite",
-    "build": "cross-env VITE_ENV=PROD vite build",
+    "dev": "cross-env VITE_ENV=development vite --strictPort",
+    "build": "cross-env VITE_ENV=production vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
+    "preview": "vite build && vite preview --port 3001 --strictPort",
     "test": "vitest",
     "test:headless": "vitest --browser.headless"
   },
   "dependencies": {
     "@ant-design/icons": "~5.6.1",
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
-    "@module-federation/vite": "^1.6.0",
     "antd": "^5.26.0",
     "dotenv": "^17.2.0",
     "konva": "^9.3.20",
@@ -25,6 +24,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
+    "@originjs/vite-plugin-federation": "^1.4.1",
     "@testing-library/react": "^16.3.0",
     "@types/lodash": "^4.17.17",
     "@types/react": "^19.1.2",
