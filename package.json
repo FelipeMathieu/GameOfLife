@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite build && vite preview --port 3001 --strictPort",
-    "test": "vitest",
+    "vitest": "vitest",
     "test:headless": "vitest --browser.headless"
   },
   "dependencies": {

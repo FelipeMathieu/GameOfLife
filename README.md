@@ -13,7 +13,7 @@ You can try it live on this Cloudflare deployment:
 
 - **React** for building the user interface
 - **Vite** for fast build and development
-- **PNPM** as the package manager
+- **Bun** as the JavaScript runtime and package manager
 - **Node.js** version `24.0.0`
 
 ---
@@ -22,10 +22,9 @@ You can try it live on this Cloudflare deployment:
 
 ### Prerequisites
 
-Make sure you have the correct Node.js version and `pnpm` installed:
+Make sure you have Bun installed:
 
-- Install Node.js → [Node.js Docs](https://nodejs.org/en)
-- Install PNPM → [PNPM Docs](https://pnpm.io/installation)
+- Install Bun → [Bun Docs](https://bun.sh/docs/installation)
 
 ### Running the Project
 
@@ -33,13 +32,13 @@ Make sure you have the correct Node.js version and `pnpm` installed:
 2. Install dependencies:
 
    ```bash
-   pnpm install
+   bun install
    ```
 
 3. Run the development server:
 
    ```bash
-   pnpm dev
+   bun dev
    ```
 
 Open `http://localhost:5173/` in your browser.
@@ -50,13 +49,13 @@ Open `http://localhost:5173/` in your browser.
 
 Here are some available scripts from package.json:
 
-| Script         | Description                          |
-| -------------- | ------------------------------------ |
-| `pnpm dev`     | Start the development server         |
-| `pnpm build`   | Create an optimized production build |
-| `pnpm preview` | Preview the production build locally |
-| `pnpm lint`    | Run ESLint on the codebase           |
-| `pnpm test`    | Run unit tests (if configured)       |
+| Script        | Description                          |
+| ------------- | ------------------------------------ |
+| `bun dev`     | Start the development server         |
+| `bun build`   | Create an optimized production build |
+| `bun preview` | Preview the production build locally |
+| `bun lint`    | Run ESLint on the codebase           |
+| `bun test`    | Run unit tests (if configured)       |
 
 ---
 
